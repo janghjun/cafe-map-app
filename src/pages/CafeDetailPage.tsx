@@ -1,0 +1,187 @@
+import { useEffect } from "react";
+import type { Cafe } from "../types/cafe";
+import { AttributeSummary } from "../components/AttributeSummary";
+import { TagBadge } from "../components/TagBadge";
+import { getCafeMapUrl } from "../utils/naverMap";
+import { addRecentView } from "../services/recentViewService";
+import { trackEvent } from "../services/logService";
+import "../styles/pages.css";
+
+function buildStudySummary(cafe: Cafe): string[] {
+  const a = cafe.attributes;
+  const sentences: string[] = [];
+  const used = new Set<string>();
+
+  // S1: 인원/좌석 특성 (항상 생성)
+  const isSoloBetter = a.soloScore >= a.groupScore;
+  if (a.soloScore >= 4 && a.outletScore >= 4) {
+    sentences.push("1인 카공에 적합하고 콘센트 환경이 좋아요.");
+    used.add("solo"); used.add("outlet");
+  } else if (a.groupScore >= 4 && a.groupSeatScore >= 4) {
+    sentences.push("그룹 스터디를 위한 단체석이 갖춰져 있어요.");
+    used.add("group");
+  } else if (isSoloBetter && a.soloScore >= 3) {
+    sentences.push("혼자 공부하기 적합한 분위기예요.");
+    used.add("solo");
+  } else if (a.groupScore >= 3) {
+    sentences.push("소그룹 이용이 가능한 공간이에요.");
+    used.add("group");
+  } else {
+    sentences.push("카공 조건을 확인하고 방문해보세요.");
+  }
+
+  // S2: 영업/체류/분위기 (항상 생성)
+  if (cafe.is24Hours) {
+    sentences.push("24시간 운영해 언제든 방문 가능해요.");
+  } else if (a.lateOpenScore >= 4) {
+    sentences.push("늦은 시간까지 영업해 야간 카공도 가능해요.");
+  } else if (a.stayScore >= 4) {
+    sentences.push("오래 머물기 부담 없는 분위기예요.");
+    used.add("stay");
+  } else if (a.quietScore >= 4 && !used.has("quiet")) {
+    sentences.push("조용한 분위기에서 집중하기 좋아요.");
+    used.add("quiet");
+  } else if (a.outletScore >= 4 && !used.has("outlet")) {
+    sentences.push("콘센트 자리가 충분해 노트북 작업에도 편해요.");
+    used.add("outlet");
+  } else if (a.wifiScore >= 4) {
+    sentences.push("와이파이 환경이 좋아 온라인 작업에도 문제없어요.");
+  } else {
+    sentences.push("체류 환경이 무난해 카공하기 괜찮은 공간이에요.");
+  }
+
+  // S3: 선택적 보너스
+  if (sentences.length < 3) {
+    if (a.quietScore >= 5 && !used.has("quiet")) {
+      sentences.push("특히 조용해서 집중 환경이 좋아요.");
+    } else if (a.stayScore >= 5 && !used.has("stay")) {
+      sentences.push("장시간 체류에 부담 없는 공간이에요.");
+    } else if (a.coffeeScore >= 5) {
+      sentences.push("커피 퀄리티가 좋아 오래 머물어도 만족스러워요.");
+    } else if (a.dessertScore >= 5) {
+      sentences.push("디저트 종류가 다양해 쉬는 시간에 즐기기 좋아요.");
+    }
+  }
+
+  return sentences.slice(0, 3);
+}
+
+type Props = {
+  cafe: Cafe;
+  distanceLabel?: string;
+  onBack: () => void;
+  onFavoriteClick?: (cafe: Cafe) => void;
+  isFavorite?: boolean;
+  onSuggestClick?: () => void;
+};
+
+export function CafeDetailPage({
+  cafe,
+  distanceLabel,
+  onBack,
+  onFavoriteClick,
+  isFavorite = false,
+  onSuggestClick,
+}: Props) {
+  useEffect(() => {
+    addRecentView(cafe.id);
+    trackEvent("cafe_detail_view", { cafeId: cafe.id, cafeDistrict: cafe.district });
+  }, [cafe.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const mapUrl = getCafeMapUrl(cafe);
+
+  const studySummary = buildStudySummary(cafe);
+
+  return (
+    <div className="page detail-page">
+      <div className="page-top-bar">
+        <button type="button" className="btn-back" onClick={onBack}>
+          ← 뒤로
+        </button>
+      </div>
+
+      {/* 기본 정보 */}
+      <section className="detail-section">
+        <h1 className="detail-name">{cafe.name}</h1>
+        <p className="detail-address">{cafe.address}</p>
+        <div className="detail-meta">
+          <span>{cafe.district} {cafe.dong}</span>
+          {distanceLabel && <><span className="detail-dot">·</span><span>{distanceLabel}</span></>}
+          {cafe.is24Hours && <span className="detail-badge detail-badge--24h">24시간</span>}
+        </div>
+        {cafe.openHoursSummary && (
+          <p className="detail-hours">{cafe.openHoursSummary}</p>
+        )}
+      </section>
+
+      {/* 한 줄 요약 */}
+      {cafe.summary && (
+        <section className="detail-section">
+          <p className="detail-summary">"{cafe.summary}"</p>
+        </section>
+      )}
+
+      {/* 카공 적합도 요약 */}
+      <section className="detail-section">
+        <h2 className="detail-section__label">카공 적합도</h2>
+        {studySummary.length > 0 && (
+          <div className="detail-study-summary">
+            {studySummary.map((s, i) => (
+              <p key={i} className="detail-study-summary__line">{s}</p>
+            ))}
+          </div>
+        )}
+        <AttributeSummary cafe={cafe} />
+      </section>
+
+      {/* 태그 */}
+      {cafe.tags.length > 0 && (
+        <section className="detail-section">
+          <h2 className="detail-section__label">카공 태그</h2>
+          <div className="detail-tags">
+            {cafe.tags.map((tag) => (
+              <TagBadge key={tag} tag={tag} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* CTA */}
+      <section className="detail-cta">
+        <a
+          href={mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-primary btn-primary--link"
+          onClick={() => trackEvent("direction_click", {
+            cafeId: cafe.id,
+            cafeDistrict: cafe.district,
+            source: cafe.naverMapUrl ? "direct" : "search",
+          })}
+        >
+          네이버 지도에서 보기
+        </a>
+
+        {onFavoriteClick && (
+          <button
+            type="button"
+            className={`btn-secondary${isFavorite ? " btn-secondary--active" : ""}`}
+            onClick={() => onFavoriteClick(cafe)}
+          >
+            {isFavorite ? "★ 저장됨" : "☆ 저장하기"}
+          </button>
+        )}
+      </section>
+
+      {/* 데이터 기준 안내 + 정보 수정 제안 */}
+      <div className="page-footer-link">
+        <p className="detail-footnote">카공 적합도는 직접 수집한 기준이에요. 실제 운영 상황은 방문 전 확인해주세요.</p>
+        {onSuggestClick && (
+          <button type="button" className="btn-text" onClick={onSuggestClick}>
+            정보가 다른가요? 수정 제안하기 →
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}

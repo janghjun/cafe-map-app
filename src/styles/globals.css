@@ -1,0 +1,33 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-brand:       #6b4f3a;
+  --color-brand-dark:  #5c4033;
+  --color-brand-light: #d4b896;
+  --color-bg:          #faf7f4;
+  --color-surface:     #ffffff;
+  --color-text:        #2c1a0e;
+  --color-text-muted:  #7a6355;
+  --color-border:      #e8ddd4;
+  --max-width:         480px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: 100dvh;
+  /* iOS 노치·홈 인디케이터 Safe Area 대응 */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
