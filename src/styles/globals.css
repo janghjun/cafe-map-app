@@ -3,15 +3,56 @@
 }
 
 :root {
-  --color-brand:       #6b4f3a;
-  --color-brand-dark:  #5c4033;
-  --color-brand-light: #d4b896;
-  --color-bg:          #faf7f4;
-  --color-surface:     #ffffff;
-  --color-text:        #2c1a0e;
-  --color-text-muted:  #7a6355;
-  --color-border:      #e8ddd4;
-  --max-width:         480px;
+  /* Brand */
+  --color-brand:        #6b4226;
+  --color-brand-dark:   #4e2e18;
+  --color-brand-light:  #c9a97a;
+  --color-accent:       #e07b2a;
+
+  /* Surfaces */
+  --color-bg:           #f8f4f0;
+  --color-surface:      #ffffff;
+  --color-surface-warm: #fdf8f4;
+  --color-surface-tint: #f5ede5;
+
+  /* Text */
+  --color-text:         #1a0f08;
+  --color-text-muted:   #7a6355;
+  --color-text-subtle:  #a89080;
+
+  /* Borders */
+  --color-border:       #e8ddd4;
+  --color-border-soft:  #f0e8e0;
+  --color-border-strong:#c4a882;
+
+  /* Gradients */
+  --gradient-brand:         linear-gradient(135deg, #4e2e18 0%, #7a4d2e 100%);
+  --gradient-hero:          linear-gradient(160deg, #2d1506 0%, #6b4226 55%, #935c3a 100%);
+  --gradient-primary-btn:   linear-gradient(160deg, #7a4d2e 0%, #5c3218 100%);
+
+  /* Shadows (elevation system) */
+  --shadow-xs:         0 1px 2px rgba(26, 15, 8, 0.05);
+  --shadow-sm:         0 1px 4px rgba(26, 15, 8, 0.07), 0 1px 2px rgba(26, 15, 8, 0.04);
+  --shadow-md:         0 4px 12px rgba(26, 15, 8, 0.09), 0 2px 4px rgba(26, 15, 8, 0.05);
+  --shadow-lg:         0 8px 24px rgba(26, 15, 8, 0.11), 0 4px 8px rgba(26, 15, 8, 0.06);
+  --shadow-brand:      0 4px 16px rgba(107, 66, 38, 0.35);
+  --shadow-card:       0 1px 3px rgba(26, 15, 8, 0.07), 0 1px 2px rgba(26, 15, 8, 0.04);
+  --shadow-card-hover: 0 6px 20px rgba(26, 15, 8, 0.11), 0 2px 6px rgba(26, 15, 8, 0.06);
+
+  /* Border radius */
+  --radius-xs:   6px;
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   18px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.12s ease;
+  --transition-base: 0.18s ease;
+  --transition-slow: 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --max-width: 480px;
 }
 
 html, body {
@@ -19,14 +60,17 @@ html, body {
   padding: 0;
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
 #root {
   max-width: var(--max-width);
   margin: 0 auto;
   min-height: 100dvh;
+  background-color: var(--color-bg);
   /* iOS 노치·홈 인디케이터 Safe Area 대응 */
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);

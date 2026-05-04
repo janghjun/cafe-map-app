@@ -105,13 +105,15 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
 
   return (
     <div className="home-page">
-      <header className="home-header">
+      <header className="home-hero">
         <h1 className="home-title">
           카공 어디가?
           <span className="home-title__sub">인천편</span>
         </h1>
         <p className="home-subtitle">인천에서 공부하기 좋은 카페를 찾아드릴게요</p>
       </header>
+
+      <div className="home-body">
 
       <section className="home-section">
         <h2 className="home-section__label">⚡ 빠른 선택</h2>
@@ -225,6 +227,8 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
             </button>
           </div>
         )}
+      </div>
+
       </div>
     </div>
   );
