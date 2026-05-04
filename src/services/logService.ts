@@ -27,7 +27,8 @@ export type LogEventName =
   | "course_deleted"
   | "course_viewed"
   | "course_cafe_added"
-  | "course_cafe_removed";
+  | "course_cafe_removed"
+  | "fallback_applied";
 
 // 이벤트별로 저장되는 필드 (위치 좌표/주소/전화번호 등 개인정보 미포함)
 export type LogEventPayload = Partial<{
@@ -46,6 +47,9 @@ export type LogEventPayload = Partial<{
   mode: string;
   updateReasonType: string;
   status: string;
+  curatedCount: number;
+  section: string;
+  type: string;
 }>;
 
 export type LogEvent = {

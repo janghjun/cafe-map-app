@@ -609,12 +609,18 @@
   width: 100%;
   overflow: hidden;
   border-radius: var(--radius-xs);
+  border: 1px solid var(--color-border);
 }
 
 .mini-map__canvas svg {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* Leaflet 지도 컨테이너 */
+.mini-map__canvas--leaflet {
+  border-radius: 10px;
 }
 
 .mini-map__legend {
