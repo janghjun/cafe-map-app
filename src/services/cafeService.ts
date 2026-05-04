@@ -2,6 +2,7 @@ import type { Cafe } from "../types/cafe";
 import { MOCK_CAFES } from "../data/cafes.mock";
 import { isSupabaseConfigured, getSupabaseClient } from "./supabaseClient";
 import { mapCafeRow, type CafeRow } from "./cafeMapper";
+import { applyCuratedOverrides } from "../utils/applyCuratedOverrides";
 
 const SUPABASE_SELECT =
   "*, cafe_attributes(*), cafe_tags(tag)";
@@ -19,11 +20,11 @@ async function fetchFromSupabase(): Promise<Cafe[]> {
     .eq("status", "active");
 
   if (error) throw new Error(`Supabase 카페 조회 실패: ${error.message}`);
-  return (data as CafeRow[]).map(mapCafeRow);
+  return applyCuratedOverrides((data as CafeRow[]).map(mapCafeRow));
 }
 
 export async function getCafes(): Promise<Cafe[]> {
-  if (!useSupabase) return MOCK_CAFES;
+  if (!useSupabase) return applyCuratedOverrides(MOCK_CAFES);
   if (_cache) return _cache;
   _cache = await fetchFromSupabase();
   return _cache;
@@ -55,7 +56,7 @@ export function getCafesSync(): Cafe[] {
     // 캐시 미스: 빈 배열 반환. App 마운트 시 initCafeService()가 채워줍니다.
     return [];
   }
-  return MOCK_CAFES;
+  return applyCuratedOverrides(MOCK_CAFES);
 }
 
 /** App 마운트 시 1회 호출해 Supabase 모드의 캐시를 미리 채웁니다.

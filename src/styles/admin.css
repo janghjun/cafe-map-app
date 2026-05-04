@@ -307,3 +307,75 @@
   color: #9ca3af;
   text-align: center;
 }
+
+/* ── Admin Tabs ── */
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px 0;
+  border-bottom: 1.5px solid #e5e7eb;
+  margin-bottom: 0;
+}
+
+.admin-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1.5px;
+}
+
+.admin-tab-btn.--active {
+  color: #1f2937;
+  border-bottom-color: #6b4226;
+}
+
+/* ── Admin Candidates tab ── */
+.admin-candidates {
+  padding: 0;
+}
+
+.admin-candidates__notice {
+  margin: 12px 16px;
+  padding: 10px 14px;
+  background: #fef3c7;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #92400e;
+}
+
+.admin-card__meta {
+  font-size: 11px;
+  color: #9ca3af;
+  padding: 2px 12px 0;
+}
+
+.admin-card__confidence {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.admin-card__actions--todo {
+  padding: 8px 12px;
+}
+
+.admin-todo-note {
+  font-size: 11px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.admin-empty__sub {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 4px 0 0;
+}

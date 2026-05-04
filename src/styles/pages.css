@@ -318,6 +318,11 @@
   letter-spacing: 0.05em;
 }
 
+.recommendation-section-label--curated {
+  color: var(--color-accent);
+  margin-top: 0;
+}
+
 .btn-show-more {
   width: 100%;
   padding: 13px;
@@ -536,6 +541,25 @@
   background: linear-gradient(135deg, #fdf8f4 0%, #f9f0e8 100%);
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--color-brand);
+}
+
+.detail-section--curated .detail-section__label {
+  color: var(--color-accent);
+}
+
+.detail-section--curated .detail-curator-note {
+  border-left-color: var(--color-accent);
+  background: linear-gradient(135deg, #fff8f0 0%, #fef3e8 100%);
+}
+
+.detail-recheck-notice {
+  margin: 0;
+  font-size: 13px;
+  color: #92400e;
+  padding: 10px 14px;
+  background: #fef3c7;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #f59e0b;
 }
 
 .detail-tags {

@@ -145,11 +145,16 @@ export function CafeDetailPage({
         </section>
       )}
 
-      {/* 운영자 메모 */}
-      {cafe.curatorNote && (
-        <section className="detail-section">
-          <h2 className="detail-section__label">운영자 메모</h2>
+      {/* 운영자 메모 — curated만 표시, needs_recheck는 안내 */}
+      {cafe.verificationStatus === "curated" && cafe.curatorNote && (
+        <section className="detail-section detail-section--curated">
+          <h2 className="detail-section__label">⭐ 운영자 추천 메모</h2>
           <p className="detail-curator-note">{cafe.curatorNote}</p>
+        </section>
+      )}
+      {cafe.verificationStatus === "needs_recheck" && (
+        <section className="detail-section">
+          <p className="detail-recheck-notice">⚠ 이 카페의 정보를 재확인 중이에요. 방문 전 직접 확인해 주세요.</p>
         </section>
       )}
 

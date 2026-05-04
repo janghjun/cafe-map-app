@@ -5,6 +5,8 @@ import { recommendCafes } from "../utils/recommendation";
 import { formatDistance } from "../utils/distance";
 import { getCafesSync } from "../services/cafeService";
 import { getCafeHighlights } from "../utils/cafeHighlights";
+import { splitRecommendationSections } from "../utils/recommendationSections";
+import { buildFallbackSuggestions } from "../utils/recommendationFallback";
 import { CafeCard } from "../components/CafeCard";
 import { MiniMapPreview } from "../components/MiniMapPreview";
 import { RecommendationCriteria } from "../components/RecommendationCriteria";
@@ -48,22 +50,34 @@ export function RecommendationPage({
   favoriteIds = [],
   onFavoriteToggle,
 }: Props) {
-  const [limit, setLimit] = useState<3 | 5>(3);
+  const [showMore, setShowMore] = useState(false);
+  const [localPref, setLocalPref] = useState<UserPreference>(preference);
 
-  const allResults = recommendCafes(getCafesSync(), preference, userLocation, 5);
-  const visibleResults = allResults.slice(0, limit);
-  const canShowMore = allResults.length > 3 && limit === 3;
+  const cafes = getCafesSync();
+  const allResults = recommendCafes(cafes, localPref, userLocation, 5);
+  const { curatedResults, conditionResults } = splitRecommendationSections(allResults);
+  const visibleConditionResults = showMore ? conditionResults : conditionResults.slice(0, 3);
+  const totalVisible = curatedResults.length + visibleConditionResults.length;
+  const canShowMore = conditionResults.length > 3 && !showMore;
 
   useEffect(() => {
-    trackEvent("recommendation_result_view", { resultCount: allResults.length, radius: preference.radius });
+    trackEvent("recommendation_result_view", {
+      resultCount: allResults.length,
+      curatedCount: curatedResults.length,
+      radius: localPref.radius,
+    });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const prefChips = getPreferenceChips(localPref);
 
   const summaryText =
     allResults.length > 0
-      ? `내 주변 ${preference.radius}km 안에서 조건에 맞는 카페 ${allResults.length}곳을 찾았어요`
-      : `내 주변 ${preference.radius}km 안에서 조건에 맞는 카페를 찾지 못했어요`;
+      ? `내 주변 ${localPref.radius}km 안에서 조건에 맞는 카페 ${allResults.length}곳을 찾았어요`
+      : `내 주변 ${localPref.radius}km 안에서 조건에 맞는 카페를 찾지 못했어요`;
 
-  const prefChips = getPreferenceChips(preference);
+  const fallbackSuggestions = allResults.length === 0
+    ? buildFallbackSuggestions(cafes, localPref, userLocation)
+    : [];
 
   return (
     <div className="page recommendation-page">
@@ -82,45 +96,37 @@ export function RecommendationPage({
 
       <p className="recommendation-summary">{summaryText}</p>
 
-      {visibleResults.length === 0 ? (
+      {totalVisible === 0 ? (
         <EmptyState
           title="이 조건으로는 찾기 어려워요"
           description="조건을 조금 넓히면 더 많은 카공 카페를 찾을 수 있어요."
+          fallbacks={fallbackSuggestions.map((s) => ({
+            label: s.label,
+            description: s.description,
+            onApply: () => {
+              const next: UserPreference = {
+                ...localPref,
+                ...(s.newRadius !== undefined && { radius: s.newRadius }),
+                ...(s.relaxCondition !== undefined && { [s.relaxCondition]: false }),
+              };
+              setShowMore(false);
+              setLocalPref(next);
+              trackEvent("fallback_applied", { type: s.relaxCondition ?? `radius_${s.newRadius}` });
+            },
+          }))}
           actionLabel="조건 다시 선택하기"
           onAction={onBack}
         />
       ) : (
         <div className="cafe-list">
-          {/* 1순위 — 가장 추천 */}
-          {(() => {
-            const result = visibleResults[0];
-            const distLabel = formatDistance(result.distanceKm);
-            return (
-              <CafeCard
-                key={result.cafe.id}
-                cafe={result.cafe}
-                distanceLabel={distLabel}
-                score={result.score}
-                reasons={result.matchReasons}
-                highlights={getCafeHighlights(result.cafe, preference)}
-                variant="primary"
-                isFavorite={favoriteIds.includes(result.cafe.id)}
-                onFavoriteClick={onFavoriteToggle}
-                onClick={(cafe) => {
-                  trackEvent("cafe_card_click", { cafeId: cafe.id, cafeDistrict: cafe.district, rank: 1 });
-                  onCafeClick(cafe, distLabel);
-                }}
-              />
-            );
-          })()}
 
-          {/* 2순위 이하 — 다른 추천 */}
-          {visibleResults.length > 1 && (
+          {/* 운영자 추천 섹션 */}
+          {curatedResults.length > 0 && (
             <>
-              <p className="recommendation-section-label">
-                다른 추천 {visibleResults.length - 1}곳
+              <p className="recommendation-section-label recommendation-section-label--curated">
+                ⭐ 운영자 추천
               </p>
-              {visibleResults.slice(1).map((result, idx) => {
+              {curatedResults.map((result, idx) => {
                 const distLabel = formatDistance(result.distanceKm);
                 return (
                   <CafeCard
@@ -130,11 +136,41 @@ export function RecommendationPage({
                     score={result.score}
                     reasons={result.matchReasons}
                     highlights={getCafeHighlights(result.cafe, preference)}
-                    variant="secondary"
+                    variant="primary"
                     isFavorite={favoriteIds.includes(result.cafe.id)}
                     onFavoriteClick={onFavoriteToggle}
                     onClick={(cafe) => {
-                      trackEvent("cafe_card_click", { cafeId: cafe.id, cafeDistrict: cafe.district, rank: idx + 2 });
+                      trackEvent("cafe_card_click", { cafeId: cafe.id, cafeDistrict: cafe.district, rank: idx + 1, section: "curated" });
+                      onCafeClick(cafe, distLabel);
+                    }}
+                  />
+                );
+              })}
+            </>
+          )}
+
+          {/* 조건 기반 추천 섹션 */}
+          {visibleConditionResults.length > 0 && (
+            <>
+              <p className="recommendation-section-label">
+                {curatedResults.length > 0 ? "조건에 맞는 카페" : "추천 카페"}
+              </p>
+              {visibleConditionResults.map((result, idx) => {
+                const distLabel = formatDistance(result.distanceKm);
+                const isFirst = curatedResults.length === 0 && idx === 0;
+                return (
+                  <CafeCard
+                    key={result.cafe.id}
+                    cafe={result.cafe}
+                    distanceLabel={distLabel}
+                    score={result.score}
+                    reasons={result.matchReasons}
+                    highlights={getCafeHighlights(result.cafe, preference)}
+                    variant={isFirst ? "primary" : "secondary"}
+                    isFavorite={favoriteIds.includes(result.cafe.id)}
+                    onFavoriteClick={onFavoriteToggle}
+                    onClick={(cafe) => {
+                      trackEvent("cafe_card_click", { cafeId: cafe.id, cafeDistrict: cafe.district, rank: idx + 1 + curatedResults.length, section: "condition" });
                       onCafeClick(cafe, distLabel);
                     }}
                   />
@@ -147,17 +183,17 @@ export function RecommendationPage({
             <button
               type="button"
               className="btn-show-more"
-              onClick={() => setLimit(5)}
+              onClick={() => setShowMore(true)}
             >
-              카페 더 보기 ({allResults.length - 3}곳 더)
+              카페 더 보기 ({conditionResults.length - 3}곳 더)
             </button>
           )}
         </div>
       )}
 
-      {visibleResults.length > 0 && (
+      {totalVisible > 0 && (
         <MiniMapPreview
-          points={visibleResults.map((r) => ({
+          points={[...curatedResults, ...visibleConditionResults].map((r) => ({
             id: r.cafe.id,
             name: r.cafe.name,
             lat: r.cafe.lat,
@@ -165,7 +201,7 @@ export function RecommendationPage({
           }))}
           userLocation={userLocation}
           onMarkerClick={(cafeId) => {
-            const result = visibleResults.find((r) => r.cafe.id === cafeId);
+            const result = [...curatedResults, ...visibleConditionResults].find((r) => r.cafe.id === cafeId);
             if (result) {
               trackEvent("cafe_card_click", { cafeId: result.cafe.id, cafeDistrict: result.cafe.district, source: "mini_map" });
               onCafeClick(result.cafe, formatDistance(result.distanceKm));
