@@ -5,6 +5,7 @@ import { RadiusSelector } from "../components/RadiusSelector";
 import { FilterChip } from "../components/FilterChip";
 import { trackEvent } from "../services/logService";
 import { QUICK_PRESETS } from "../utils/quickPresets";
+import { getCafeCount } from "../services/cafeService";
 import {
   getFallbackLocation,
   getCurrentLocation,
@@ -103,14 +104,19 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
     onRecommend(preference, userLocation);
   }
 
+  const cafeCount = getCafeCount();
+
   return (
     <div className="home-page">
       <header className="home-hero">
+        <div className="home-hero__badge">
+          인천 카공 카페 {cafeCount}곳 수록
+        </div>
         <h1 className="home-title">
           카공 어디가?
           <span className="home-title__sub">인천편</span>
         </h1>
-        <p className="home-subtitle">인천에서 공부하기 좋은 카페를 찾아드릴게요</p>
+        <p className="home-subtitle">지금 내 주변에서 공부하기 좋은 카페를 찾아드릴게요</p>
       </header>
 
       <div className="home-body">

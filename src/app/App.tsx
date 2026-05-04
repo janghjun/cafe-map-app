@@ -11,6 +11,7 @@ import { ServiceInfoPage } from "../pages/ServiceInfoPage";
 import { ThemeCafesPage } from "../pages/ThemeCafesPage";
 import { AdminCandidateListPage } from "../pages/admin/AdminCandidateListPage";
 import { AdminLoginPage } from "../pages/admin/AdminLoginPage";
+import { Toast } from "../components/Toast";
 import { getFavorites, toggleFavorite } from "../services/favoriteService";
 import { getRecentViews } from "../services/recentViewService";
 import { trackEvent } from "../services/logService";
@@ -41,6 +42,7 @@ export function App() {
   const [adminAuthed, setAdminAuthed] = useState(
     () => IS_ADMIN_MODE && sessionStorage.getItem("kagong_admin_session") === "ok"
   );
+  const [toast, setToast] = useState<{ message: string; key: number } | null>(null);
   const nav = navStack[navStack.length - 1];
 
   // UI 버튼의 pop()이 history.back()을 호출할 때 popstate가 추가로 발생해
@@ -88,7 +90,7 @@ export function App() {
   }, [nav.page]);
 
   function push(state: NavState) {
-    // history entry를 쌓아 Android 뒤로가기가 popstate를 발생시킬 수 있게 합니다.
+    window.scrollTo({ top: 0, behavior: "instant" });
     history.pushState(null, "");
     setNavStack((prev) => [...prev, state]);
   }
@@ -106,6 +108,7 @@ export function App() {
     const isAdding = !favorites.includes(cafe.id);
     toggleFavorite(cafe.id);
     setFavorites(getFavorites());
+    setToast({ message: isAdding ? "⭐ 즐겨찾기에 추가했어요" : "즐겨찾기에서 제거했어요", key: Date.now() });
     trackEvent(isAdding ? "favorite_add" : "favorite_remove", { cafeId: cafe.id, cafeDistrict: cafe.district });
   }
 
@@ -137,9 +140,10 @@ export function App() {
     );
   }
 
+  let page: React.ReactElement;
   switch (nav.page) {
     case "home":
-      return (
+      page = (
         <HomePage
           onRecommend={(preference, userLocation) =>
             push({ page: "recommendations", preference, userLocation })
@@ -153,9 +157,10 @@ export function App() {
           onServiceInfoClick={() => push({ page: "serviceInfo" })}
         />
       );
+      break;
 
     case "recommendations":
-      return (
+      page = (
         <RecommendationPage
           preference={nav.preference}
           userLocation={nav.userLocation}
@@ -166,9 +171,10 @@ export function App() {
           onFavoriteToggle={handleFavoriteToggle}
         />
       );
+      break;
 
     case "cafeDetail":
-      return (
+      page = (
         <CafeDetailPage
           cafe={nav.cafe}
           distanceLabel={nav.distanceLabel}
@@ -178,17 +184,14 @@ export function App() {
           onSuggestClick={(cafeId, cafeName) => push({ page: "suggestCafe", targetCafeId: cafeId, targetCafeName: cafeName })}
         />
       );
+      break;
 
     case "districtBest":
-      return (
-        <DistrictBestPage
-          onCafeClick={handleCafeClick}
-          onBack={pop}
-        />
-      );
+      page = <DistrictBestPage onCafeClick={handleCafeClick} onBack={pop} />;
+      break;
 
     case "favorites":
-      return (
+      page = (
         <FavoritesPage
           favoriteIds={favorites}
           onCafeClick={handleCafeClick}
@@ -196,9 +199,10 @@ export function App() {
           onBack={pop}
         />
       );
+      break;
 
     case "recentViews":
-      return (
+      page = (
         <RecentViewsPage
           recentIds={recentViews}
           onCafeClick={handleCafeClick}
@@ -206,9 +210,10 @@ export function App() {
           onRecentViewsCleared={handleRecentViewsCleared}
         />
       );
+      break;
 
     case "suggestCafe":
-      return (
+      page = (
         <SuggestCafePage
           onBack={pop}
           mode={nav.targetCafeId ? "update" : "new"}
@@ -216,12 +221,14 @@ export function App() {
           targetCafeName={nav.targetCafeName}
         />
       );
+      break;
 
     case "serviceInfo":
-      return <ServiceInfoPage onBack={pop} onSuggestClick={() => push({ page: "suggestCafe" })} />;
+      page = <ServiceInfoPage onBack={pop} onSuggestClick={() => push({ page: "suggestCafe" })} />;
+      break;
 
     case "themeCafes":
-      return (
+      page = (
         <ThemeCafesPage
           onCafeClick={handleCafeClick}
           onBack={pop}
@@ -229,5 +236,15 @@ export function App() {
           onFavoriteToggle={handleFavoriteToggle}
         />
       );
+      break;
   }
+
+  return (
+    <>
+      {page}
+      {toast && (
+        <Toast key={toast.key} message={toast.message} onDismiss={() => setToast(null)} />
+      )}
+    </>
+  );
 }

@@ -64,3 +64,10 @@ export async function initCafeService(): Promise<void> {
   if (!useSupabase) return;
   await getCafes();
 }
+
+/** 항상 유효한 활성 카페 수를 반환합니다.
+ *  Supabase 캐시가 비어있으면 MOCK_CAFES 기준으로 폴백합니다. */
+export function getCafeCount(): number {
+  const source = (_cache && _cache.length > 0) ? _cache : MOCK_CAFES;
+  return source.filter((c) => c.status === "active").length;
+}

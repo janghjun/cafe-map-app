@@ -60,7 +60,7 @@
 /* Hero block */
 .home-hero {
   background: var(--gradient-hero);
-  padding: 28px 20px 24px;
+  padding: 24px 20px 28px;
   position: relative;
   overflow: hidden;
 }
@@ -69,13 +69,27 @@
   content: "";
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 24px;
+  height: 28px;
   background: linear-gradient(to top, var(--color-bg), transparent);
 }
 
+.home-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.90);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 12px;
+  letter-spacing: 0.01em;
+}
+
 .home-title {
-  margin: 0 0 6px;
-  font-size: 26px;
+  margin: 0 0 8px;
+  font-size: 28px;
   font-weight: 900;
   color: #ffffff;
   display: flex;
@@ -86,25 +100,25 @@
 }
 
 .home-title__sub {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.60);
   letter-spacing: 0;
 }
 
 .home-subtitle {
   margin: 0;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.70);
+  line-height: 1.6;
 }
 
 /* Body content */
 .home-body {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 20px 16px 0;
+  gap: 20px;
+  padding: 22px 16px 0;
 }
 
 .home-header {
@@ -121,11 +135,11 @@
 
 .home-section__label {
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--color-text-muted);
+  color: var(--color-text-subtle);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .quick-presets {
@@ -201,6 +215,7 @@
 .btn-location {
   display: inline-flex;
   align-items: center;
+  align-self: flex-start;
   gap: 5px;
   padding: 9px 18px;
   border-radius: var(--radius-full);
@@ -229,12 +244,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: 4px;
 }
 
 .btn-back {
   background: none;
   border: none;
-  padding: 10px 0;
+  padding: 8px 12px 8px 0;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -244,9 +260,39 @@
   cursor: pointer;
   gap: 4px;
   transition: opacity var(--transition-fast);
+  border-radius: var(--radius-xs);
 }
 
-.btn-back:hover { opacity: 0.75; }
+.btn-back:hover { opacity: 0.72; }
+
+/* 추천 결과 — 선택 조건 칩 스트립 */
+.rec-filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.rec-filter-chips::-webkit-scrollbar { display: none; }
+
+.rec-filter-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--color-surface-tint);
+  color: var(--color-brand);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+}
 
 .recommendation-summary {
   margin: 0;
@@ -385,7 +431,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 12px 16px 56px;
+  padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 88px);
 }
 
 .detail-section {
@@ -403,10 +449,10 @@
 .detail-section__label {
   margin: 0;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--color-text-subtle);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
 }
 
 .detail-name {
@@ -534,13 +580,6 @@
 }
 
 /* CTA */
-.detail-cta {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 20px 0 8px;
-}
-
 .btn-primary--link {
   display: block;
   text-align: center;
@@ -551,6 +590,74 @@
   background-color: var(--color-surface-tint);
   border-color: var(--color-brand);
   color: var(--color-brand);
+}
+
+/* Sticky CTA — 상세 페이지 하단 고정 */
+.detail-sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-border-soft);
+  box-shadow: 0 -4px 16px rgba(26, 15, 8, 0.07);
+  z-index: 100;
+}
+
+.detail-sticky-cta__map {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--gradient-primary-btn);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-brand);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  letter-spacing: -0.02em;
+}
+
+.detail-sticky-cta__map:hover  { opacity: 0.92; }
+.detail-sticky-cta__map:active { transform: scale(0.98); box-shadow: var(--shadow-sm); }
+
+.detail-sticky-cta__fav {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-border-strong);
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+              background-color var(--transition-fast), transform var(--transition-fast);
+  box-shadow: var(--shadow-xs);
+}
+
+.detail-sticky-cta__fav:hover  { border-color: var(--color-accent); color: var(--color-accent); }
+.detail-sticky-cta__fav:active { transform: scale(0.93); }
+
+.detail-sticky-cta__fav--active {
+  border-color: var(--color-accent);
+  background: #fff3e0;
+  color: var(--color-accent);
 }
 
 /* ── CafeDetailPage — study summary ── */
@@ -573,8 +680,8 @@
 
 .detail-study-summary__line::before {
   content: "✓ ";
-  color: var(--color-brand-light);
-  font-weight: 700;
+  color: var(--color-brand);
+  font-weight: 800;
 }
 
 /* ── FavoritesPage — 코스 ── */

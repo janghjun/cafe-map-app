@@ -12,6 +12,23 @@ import { EmptyState } from "../components/EmptyState";
 import { trackEvent } from "../services/logService";
 import "../styles/pages.css";
 
+function getPreferenceChips(pref: UserPreference): string[] {
+  const chips: string[] = [];
+  chips.push(`${pref.radius}km`);
+  if (pref.peopleType === "solo") chips.push("혼자");
+  else if (pref.peopleType === "group_2_4") chips.push("2~4명");
+  else chips.push("5명 이상");
+  if (pref.mood === "quiet") chips.push("조용한 곳");
+  else chips.push("대화 가능");
+  if (pref.needOutlet)   chips.push("콘센트");
+  if (pref.needWifi)     chips.push("와이파이");
+  if (pref.needLateOpen) chips.push("늦게까지");
+  if (pref.need24Hours)  chips.push("24시간");
+  if (pref.careCoffee)   chips.push("커피");
+  if (pref.careDessert)  chips.push("디저트");
+  return chips;
+}
+
 type Props = {
   preference: UserPreference;
   userLocation: Coords;
@@ -46,12 +63,21 @@ export function RecommendationPage({
       ? `내 주변 ${preference.radius}km 안에서 조건에 맞는 카페 ${allResults.length}곳을 찾았어요`
       : `내 주변 ${preference.radius}km 안에서 조건에 맞는 카페를 찾지 못했어요`;
 
+  const prefChips = getPreferenceChips(preference);
+
   return (
     <div className="page recommendation-page">
       <div className="page-top-bar">
         <button type="button" className="btn-back" onClick={onBack}>
           ← 다시 선택
         </button>
+      </div>
+
+      {/* 선택 조건 요약 칩 */}
+      <div className="rec-filter-chips" role="list" aria-label="선택한 조건">
+        {prefChips.map((chip) => (
+          <span key={chip} className="rec-filter-chip" role="listitem">{chip}</span>
+        ))}
       </div>
 
       <p className="recommendation-summary">{summaryText}</p>

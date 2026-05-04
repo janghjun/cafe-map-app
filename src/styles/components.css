@@ -696,7 +696,7 @@ details[open] > .faq-item__q::after {
 
 .score-bar__label {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-muted);
   white-space: nowrap;
   min-width: 28px;
@@ -708,16 +708,12 @@ details[open] > .faq-item__q::after {
 }
 
 .score-bar__block {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
   background-color: var(--color-border);
 }
 
 .score-bar__block--filled {
-  background-color: var(--color-brand-light);
-}
-
-.score-bar__block--filled:first-child {
-  background-color: var(--color-brand);
+  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-light) 100%);
 }

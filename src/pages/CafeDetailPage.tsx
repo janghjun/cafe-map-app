@@ -209,13 +209,23 @@ export function CafeDetailPage({
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="detail-cta">
+      {/* 데이터 기준 안내 + 정보 수정 제안 */}
+      <div className="page-footer-link">
+        <p className="detail-footnote">카공 적합도는 직접 수집한 기준이에요. 실제 운영 상황은 방문 전 확인해주세요.</p>
+        {onSuggestClick && (
+          <button type="button" className="btn-text" onClick={() => onSuggestClick(cafe.id, cafe.name)}>
+            정보가 다른가요? 수정 제안하기 →
+          </button>
+        )}
+      </div>
+
+      {/* Sticky CTA */}
+      <div className="detail-sticky-cta">
         <a
           href={mapUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-primary btn-primary--link"
+          className="detail-sticky-cta__map"
           onClick={() => trackEvent("direction_click", {
             cafeId: cafe.id,
             cafeDistrict: cafe.district,
@@ -224,24 +234,15 @@ export function CafeDetailPage({
         >
           네이버 지도에서 보기
         </a>
-
         {onFavoriteClick && (
           <button
             type="button"
-            className={`btn-secondary${isFavorite ? " btn-secondary--active" : ""}`}
+            className={`detail-sticky-cta__fav${isFavorite ? " detail-sticky-cta__fav--active" : ""}`}
             onClick={() => onFavoriteClick(cafe)}
+            aria-label={isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
+            aria-pressed={isFavorite}
           >
-            {isFavorite ? "★ 저장됨" : "☆ 저장하기"}
-          </button>
-        )}
-      </section>
-
-      {/* 데이터 기준 안내 + 정보 수정 제안 */}
-      <div className="page-footer-link">
-        <p className="detail-footnote">카공 적합도는 직접 수집한 기준이에요. 실제 운영 상황은 방문 전 확인해주세요.</p>
-        {onSuggestClick && (
-          <button type="button" className="btn-text" onClick={() => onSuggestClick(cafe.id, cafe.name)}>
-            정보가 다른가요? 수정 제안하기 →
+            {isFavorite ? "★" : "☆"}
           </button>
         )}
       </div>
