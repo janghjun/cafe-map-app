@@ -519,17 +519,11 @@
   overflow: hidden;
 }
 
-.mini-map__legend-dot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.mini-map__legend-bar {
   flex-shrink: 0;
-  width: 16px;
+  width: 4px;
   height: 16px;
-  border-radius: 50%;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
+  border-radius: 2px;
 }
 
 .mini-map__legend-name {
@@ -538,6 +532,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.mini-map__legend-rank {
+  font-weight: 700;
+  color: #444;
+  margin-right: 2px;
 }
 
 .mini-map__disclaimer {

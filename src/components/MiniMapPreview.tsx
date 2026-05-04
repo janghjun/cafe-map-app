@@ -154,12 +154,13 @@ export function MiniMapPreview({
             style={onMarkerClick ? { cursor: "pointer" } : undefined}
           >
             <span
-              className="mini-map__legend-dot"
+              className="mini-map__legend-bar"
               style={{ backgroundColor: MARKER_COLORS[idx % MARKER_COLORS.length] }}
-            >
-              {idx + 1}
+            />
+            <span className="mini-map__legend-name">
+              <span className="mini-map__legend-rank">{idx + 1}.</span>
+              {point.name}
             </span>
-            <span className="mini-map__legend-name">{point.name}</span>
           </span>
         ))}
       </div>

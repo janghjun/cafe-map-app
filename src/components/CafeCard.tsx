@@ -80,7 +80,7 @@ export function CafeCard({
               <span className="cafe-card__dot">·</span>
             </>
           )}
-          <span className="cafe-card__location">{cafe.district} {cafe.dong}</span>
+          <span className="cafe-card__location">{cafe.district}{cafe.dong && ` ${cafe.dong}`}</span>
           {distanceLabel && (
             <>
               <span className="cafe-card__dot">·</span>

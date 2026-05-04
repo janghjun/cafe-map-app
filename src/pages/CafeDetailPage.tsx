@@ -121,7 +121,7 @@ export function CafeDetailPage({
         <h1 className="detail-name">{cafe.name}</h1>
         <p className="detail-address">{cafe.address}</p>
         <div className="detail-meta">
-          <span>{cafe.district} {cafe.dong}</span>
+          <span>{cafe.district}{cafe.dong && ` ${cafe.dong}`}</span>
           {distanceLabel && <><span className="detail-dot">·</span><span>{distanceLabel}</span></>}
           {cafe.is24Hours && <span className="detail-badge detail-badge--24h">24시간</span>}
         </div>
