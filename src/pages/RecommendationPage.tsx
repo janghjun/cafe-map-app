@@ -3,9 +3,10 @@ import type { UserPreference, Cafe } from "../types/cafe";
 import type { Coords } from "../utils/distance";
 import { recommendCafes } from "../utils/recommendation";
 import { formatDistance } from "../utils/distance";
-import { getCafes } from "../services/cafeService";
+import { getCafesSync } from "../services/cafeService";
 import { getCafeHighlights } from "../utils/cafeHighlights";
 import { CafeCard } from "../components/CafeCard";
+import { MiniMapPreview } from "../components/MiniMapPreview";
 import { RecommendationCriteria } from "../components/RecommendationCriteria";
 import { EmptyState } from "../components/EmptyState";
 import { trackEvent } from "../services/logService";
@@ -32,7 +33,7 @@ export function RecommendationPage({
 }: Props) {
   const [limit, setLimit] = useState<3 | 5>(3);
 
-  const allResults = recommendCafes(getCafes(), preference, userLocation, 5);
+  const allResults = recommendCafes(getCafesSync(), preference, userLocation, 5);
   const visibleResults = allResults.slice(0, limit);
   const canShowMore = allResults.length > 3 && limit === 3;
 
@@ -57,9 +58,9 @@ export function RecommendationPage({
 
       {visibleResults.length === 0 ? (
         <EmptyState
-          title="조건에 맞는 카페가 없어요"
-          description="반경을 넓히거나 조건을 줄여보세요."
-          actionLabel="다시 선택하기"
+          title="이 조건으로는 찾기 어려워요"
+          description="조건을 조금 넓히면 더 많은 카공 카페를 찾을 수 있어요."
+          actionLabel="조건 다시 선택하기"
           onAction={onBack}
         />
       ) : (
@@ -126,6 +127,25 @@ export function RecommendationPage({
             </button>
           )}
         </div>
+      )}
+
+      {visibleResults.length > 0 && (
+        <MiniMapPreview
+          points={visibleResults.map((r) => ({
+            id: r.cafe.id,
+            name: r.cafe.name,
+            lat: r.cafe.lat,
+            lng: r.cafe.lng,
+          }))}
+          userLocation={userLocation}
+          onMarkerClick={(cafeId) => {
+            const result = visibleResults.find((r) => r.cafe.id === cafeId);
+            if (result) {
+              trackEvent("cafe_card_click", { cafeId: result.cafe.id, cafeDistrict: result.cafe.district, source: "mini_map" });
+              onCafeClick(result.cafe, formatDistance(result.distanceKm));
+            }
+          }}
+        />
       )}
 
       <RecommendationCriteria />

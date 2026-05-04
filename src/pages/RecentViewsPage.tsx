@@ -1,7 +1,7 @@
 import type { Cafe } from "../types/cafe";
 import { CafeCard } from "../components/CafeCard";
 import { EmptyState } from "../components/EmptyState";
-import { getCafeById } from "../services/cafeService";
+import { getCafesSync } from "../services/cafeService";
 import { getCafeHighlights } from "../utils/cafeHighlights";
 import { clearRecentViews } from "../services/recentViewService";
 import "../styles/pages.css";
@@ -14,8 +14,9 @@ type Props = {
 };
 
 export function RecentViewsPage({ recentIds, onCafeClick, onBack, onRecentViewsCleared }: Props) {
+  const allCafes = getCafesSync();
   const recentCafes = recentIds
-    .map((id) => getCafeById(id))
+    .map((id) => allCafes.find((c) => c.id === id))
     .filter((c): c is Cafe => c !== undefined);
 
   function handleClear() {
@@ -47,9 +48,9 @@ export function RecentViewsPage({ recentIds, onCafeClick, onBack, onRecentViewsC
 
       {recentCafes.length === 0 ? (
         <EmptyState
-          title="최근 본 카페가 없어요"
-          description="카페 상세를 열면 여기에 자동으로 기록돼요."
-          actionLabel="카페 추천받기"
+          title="아직 둘러본 카페가 없어요"
+          description="카공 카페를 구경하면 여기에 자동으로 기록돼요."
+          actionLabel="카공 카페 찾아보기"
           onAction={onBack}
         />
       ) : (

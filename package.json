@@ -7,13 +7,29 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "collect:candidates": "tsx scripts/collect-naver-candidates.ts",
+    "collect:dry-run": "tsx scripts/collect-naver-candidates.ts --dry-run",
+    "verify:candidates": "tsx scripts/verify-candidates.ts",
+    "verify:dry-run": "tsx scripts/verify-candidates.ts --dry-run",
+    "insert:candidates": "tsx scripts/insert-candidates.ts",
+    "insert:dry-run": "tsx scripts/insert-candidates.ts --dry-run",
+    "collect:cafe-data": "tsx scripts/collect-cafe-data.ts",
+    "collect:cafe-data:dry-run": "tsx scripts/collect-cafe-data.ts --dry-run",
+    "insert:seed-cafes": "tsx scripts/insert-seed-cafes.ts",
+    "insert:seed-cafes:dry-run": "tsx scripts/insert-seed-cafes.ts --dry-run",
+    "generate:mock": "tsx scripts/generate-mock-from-collected.ts",
+    "generate:mock:custom": "tsx scripts/generate-mock-from-collected.ts --input",
+    "expand:dataset": "tsx scripts/expand-dataset-from-sns.ts",
+    "expand:dataset:dry-run": "tsx scripts/expand-dataset-from-sns.ts --dry-run"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.105.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
   "devDependencies": {
+    "tsx": "^4.19.4",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",

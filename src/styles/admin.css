@@ -1,0 +1,309 @@
+/* =============================================
+   Admin 페이지 — 내부 운영자 전용 스타일
+   일반 사용자 화면에 포함되지 않습니다.
+   ============================================= */
+
+.admin-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 0 80px;
+  font-size: 14px;
+}
+
+.admin-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  background: #fff9c4;
+}
+
+.admin-title {
+  font-size: 16px;
+  font-weight: 700;
+  flex: 1;
+  margin: 0;
+}
+
+.admin-badge {
+  font-size: 11px;
+  background: #ef4444;
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 99px;
+  font-weight: 600;
+}
+
+/* 필터 바 */
+.admin-filter-bar {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.admin-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 99px;
+  background: #fff;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.admin-filter-btn.--active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.admin-filter-count {
+  font-size: 11px;
+  background: rgba(0,0,0,.12);
+  padding: 1px 6px;
+  border-radius: 99px;
+}
+
+/* 빈 상태 */
+.admin-empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+/* 카드 목록 */
+.admin-list {
+  list-style: none;
+  margin: 0;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fff;
+}
+
+.admin-card.--approved { border-left: 4px solid #22c55e; }
+.admin-card.--rejected { border-left: 4px solid #ef4444; }
+.admin-card.--needs_check { border-left: 4px solid #f59e0b; }
+.admin-card.--pending { border-left: 4px solid #d1d5db; }
+
+.admin-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.admin-card__name {
+  font-weight: 600;
+  font-size: 15px;
+  flex: 1;
+}
+
+.admin-status-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.admin-status-badge.--pending   { background: #f3f4f6; color: #6b7280; }
+.admin-status-badge.--approved  { background: #dcfce7; color: #15803d; }
+.admin-status-badge.--rejected  { background: #fee2e2; color: #b91c1c; }
+.admin-status-badge.--needs_check { background: #fef3c7; color: #b45309; }
+
+.admin-card__address {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.admin-card__date {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* 확장 상세 */
+.admin-card__detail {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-card__reason,
+.admin-card__tags,
+.admin-card__note,
+.admin-card__reviewed {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+/* 액션 영역 */
+.admin-card__actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.admin-note-input {
+  flex: 1 1 100%;
+  padding: 7px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+}
+
+.admin-note-input:focus {
+  border-color: #6366f1;
+}
+
+.admin-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-btn.--approve     { background: #22c55e; color: #fff; }
+.admin-btn.--reject      { background: #ef4444; color: #fff; }
+.admin-btn.--needs-check { background: #f59e0b; color: #fff; }
+
+/* 로그아웃 버튼 */
+.admin-logout-btn {
+  padding: 4px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  color: #374151;
+  white-space: nowrap;
+}
+
+/* 로그인 페이지 */
+.admin-login-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+  padding: 24px;
+}
+
+.admin-login-page--unconfigured {
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.admin-login-unconfigured {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.admin-login-hint {
+  margin: 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.admin-login-box {
+  width: 100%;
+  max-width: 320px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-login-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.admin-login-desc {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.admin-login-input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-login-input:focus {
+  border-color: #6366f1;
+}
+
+.admin-login-input--error {
+  border-color: #ef4444;
+}
+
+.admin-login-error {
+  margin: 0;
+  font-size: 13px;
+  color: #ef4444;
+  text-align: center;
+}
+
+.admin-login-btn {
+  padding: 10px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-login-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-login-warning {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+}

@@ -75,18 +75,29 @@ export function recommendCafes(
   const clampedLimit = Math.min(Math.max(limit, 1), MAX_LIMIT);
 
   return cafes
-    .filter((cafe) => cafe.status === "active")
+    .filter((cafe) => {
+      if (cafe.status !== "active") return false;
+      if (cafe.verificationStatus === "closed") return false;
+      return true;
+    })
     .map((cafe) => {
       const distanceKm = calculateDistanceKm(userLocation, { lat: cafe.lat, lng: cafe.lng });
       return { cafe, distanceKm };
     })
     .filter(({ distanceKm }) => isWithinRadius(distanceKm, preference.radius))
-    .map(({ cafe, distanceKm }) => ({
-      cafe,
-      score: scoreCafeByPreference(cafe, preference, distanceKm),
-      distanceKm,
-      matchReasons: buildRecommendationReasons(cafe, preference),
-    }))
+    .map(({ cafe, distanceKm }) => {
+      const baseScore = scoreCafeByPreference(cafe, preference, distanceKm);
+      // needs_recheck cafes show last in results — penalize score by 20%
+      const score = cafe.verificationStatus === "needs_recheck"
+        ? Math.round(baseScore * 0.8)
+        : baseScore;
+      return {
+        cafe,
+        score,
+        distanceKm,
+        matchReasons: buildRecommendationReasons(cafe, preference),
+      };
+    })
     .sort((a, b) => b.score - a.score)
     .slice(0, clampedLimit);
 }

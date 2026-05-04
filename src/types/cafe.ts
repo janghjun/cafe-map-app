@@ -1,5 +1,21 @@
 export type CafeStatus = "active" | "pending" | "closed";
 
+/** 운영자가 직접 수집·확인한 검증 단계 */
+export type CafeVerificationStatus =
+  | "candidate"      // 후보 등록만 됨, 아직 확인 안 됨
+  | "verified_basic" // 장소명·주소 수준 확인 완료
+  | "curated"        // 운영자 직접 검수 완료 — 추천 노출 최우선
+  | "needs_recheck"  // 폐업/이전 제보 등 재확인 필요 — 추천 우선순위 낮춤
+  | "closed";        // 폐업/제외 — 추천에서 완전 제외
+
+/** 검증에 활용된 출처 */
+export type CafeVerificationSources = {
+  naverLocal?: boolean;    // 네이버 지역 검색 API로 존재 확인
+  kakaoLocal?: boolean;    // 카카오 로컬 API로 존재 확인
+  manualCheck?: boolean;   // 운영자 직접 방문 또는 전화 확인
+  userSuggestion?: boolean; // 사용자 제안 기반 등록
+};
+
 export type CafeTag =
   | "quiet"
   | "talkable"
@@ -39,13 +55,20 @@ export type Cafe = {
   phone?: string;
   summary: string;
   openHoursSummary?: string;
+  openHours?: { open: number; close: number }; // 24h format; close < open means overnight (e.g. close=2 → 2am)
   is24Hours: boolean;
+  wifiStatus?: "ok" | "slow";       // 운영자 기준 와이파이 상태
+  lastWifiUpdateAt?: string;         // 운영자 마지막 확인 일시
   naverMapUrl?: string;
   status: CafeStatus;
   tags: CafeTag[];
   attributes: CafeAttributes;
   createdAt: string;
   updatedAt: string;
+  verificationStatus?: CafeVerificationStatus;
+  lastVerifiedAt?: string;
+  verificationSources?: CafeVerificationSources;
+  curatorNote?: string;
 };
 
 export type PeopleType = "solo" | "group_2_4" | "group_5_plus";

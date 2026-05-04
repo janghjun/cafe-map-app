@@ -127,3 +127,18 @@
   color: var(--color-text-muted);
   line-height: 1.6;
 }
+
+.suggest-desc--notice {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.suggest-target-cafe {
+  margin: 0;
+  padding: 10px 12px;
+  background: #f5ece6;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c1a0e;
+}

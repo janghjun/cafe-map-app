@@ -10,5 +10,6 @@ export type NavState =
   | { page: "districtBest" }
   | { page: "favorites" }
   | { page: "recentViews" }
-  | { page: "suggestCafe" }
-  | { page: "serviceInfo" };
+  | { page: "suggestCafe"; targetCafeId?: string; targetCafeName?: string }
+  | { page: "serviceInfo" }
+  | { page: "themeCafes" };

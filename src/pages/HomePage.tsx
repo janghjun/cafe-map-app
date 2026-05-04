@@ -4,6 +4,7 @@ import type { Coords } from "../utils/distance";
 import { RadiusSelector } from "../components/RadiusSelector";
 import { FilterChip } from "../components/FilterChip";
 import { trackEvent } from "../services/logService";
+import { QUICK_PRESETS } from "../utils/quickPresets";
 import {
   getFallbackLocation,
   getCurrentLocation,
@@ -14,6 +15,7 @@ import "../styles/pages.css";
 type Props = {
   onRecommend: (preference: UserPreference, userLocation: Coords) => void;
   onDistrictBest: () => void;
+  onThemeCafesClick?: () => void;
   onFavoritesClick?: () => void;
   favoritesCount?: number;
   onRecentViewsClick?: () => void;
@@ -21,7 +23,7 @@ type Props = {
   onServiceInfoClick?: () => void;
 };
 
-export function HomePage({ onRecommend, onDistrictBest, onFavoritesClick, favoritesCount, onRecentViewsClick, recentViewsCount, onServiceInfoClick }: Props) {
+export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFavoritesClick, favoritesCount, onRecentViewsClick, recentViewsCount, onServiceInfoClick }: Props) {
   useEffect(() => { trackEvent("home_view"); }, []);
 
   const [locationStatus, setLocationStatus] = useState<LocationStatus>("idle");
@@ -43,6 +45,7 @@ export function HomePage({ onRecommend, onDistrictBest, onFavoritesClick, favori
   // 이미 권한이 허용된 경우 조용히 위치를 자동 수집
   useEffect(() => {
     if (!("geolocation" in navigator)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- 마운트 시 geolocation 미지원 환경 감지 후 즉시 상태 설정
       setLocationStatus("fallback");
       return;
     }
@@ -54,7 +57,7 @@ export function HomePage({ onRecommend, onDistrictBest, onFavoritesClick, favori
         else if (perm.state === "denied") setLocationStatus("denied");
       })
       ?.catch(() => { /* Permissions API 미지원 → idle 유지 */ });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const [radius, setRadius] = useState<1 | 3 | 5>(3);
   const [peopleType, setPeopleType] = useState<PeopleType>("solo");
@@ -65,6 +68,23 @@ export function HomePage({ onRecommend, onDistrictBest, onFavoritesClick, favori
   const [need24Hours, setNeed24Hours] = useState(false);
   const [careCoffee, setCareCoffee] = useState(false);
   const [careDessert, setCareDessert] = useState(false);
+  const [activePresetId, setActivePresetId] = useState<string | null>(null);
+
+  function applyPreset(presetId: string) {
+    const preset = QUICK_PRESETS.find((p) => p.id === presetId);
+    if (!preset) return;
+    const f = preset.filters;
+    setPeopleType(f.peopleType);
+    setMood(f.mood);
+    setNeedOutlet(f.needOutlet);
+    setNeedWifi(f.needWifi);
+    setNeedLateOpen(f.needLateOpen);
+    setNeed24Hours(f.need24Hours);
+    setCareCoffee(f.careCoffee);
+    setCareDessert(f.careDessert);
+    setActivePresetId(presetId);
+    trackEvent("quick_preset_applied", { source: presetId });
+  }
 
   function handleRecommend() {
     const preference: UserPreference = {
@@ -94,6 +114,23 @@ export function HomePage({ onRecommend, onDistrictBest, onFavoritesClick, favori
       </header>
 
       <section className="home-section">
+        <h2 className="home-section__label">⚡ 빠른 선택</h2>
+        <div className="quick-presets">
+          {QUICK_PRESETS.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              className={`quick-preset-btn${activePresetId === preset.id ? " quick-preset-btn--active" : ""}`}
+              onClick={() => applyPreset(preset.id)}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+        <p className="quick-presets__hint">선택 후 조건을 직접 수정할 수 있어요</p>
+      </section>
+
+      <section className="home-section">
         <h2 className="home-section__label">📍 내 위치</h2>
         <div className="location-status-box">
           {locationStatus === "idle" && (
@@ -105,7 +142,7 @@ export function HomePage({ onRecommend, onDistrictBest, onFavoritesClick, favori
             </>
           )}
           {locationStatus === "loading" && (
-            <p className="location-status">위치 확인 중...</p>
+            <p className="location-status">위치를 가져오는 중이에요...</p>
           )}
           {locationStatus === "granted" && (
             <p className="location-status location-status--ok">✓ 현재 위치 기준으로 검색해요</p>
@@ -162,6 +199,11 @@ export function HomePage({ onRecommend, onDistrictBest, onFavoritesClick, favori
         <button type="button" className="btn-secondary" onClick={onDistrictBest}>
           인천 BEST 보기
         </button>
+        {onThemeCafesClick && (
+          <button type="button" className="btn-secondary" onClick={onThemeCafesClick}>
+            ✨ 테마 카공 추천 보기
+          </button>
+        )}
         {(onFavoritesClick || onRecentViewsClick) && (
           <div className="home-quick-links">
             {onFavoritesClick && (

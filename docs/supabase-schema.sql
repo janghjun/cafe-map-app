@@ -39,16 +39,31 @@ CREATE TABLE cafes (
   summary             TEXT,                          -- 한 줄 요약
   open_hours_summary  TEXT,                          -- 영업시간 요약 문자열
   is_24_hours         BOOLEAN          NOT NULL DEFAULT false,
-  naver_map_url       TEXT,
-  status              TEXT             NOT NULL DEFAULT 'pending'
-                        CHECK (status IN ('active', 'pending', 'closed')),
-  created_at          TIMESTAMPTZ      NOT NULL DEFAULT now(),
-  updated_at          TIMESTAMPTZ      NOT NULL DEFAULT now()
+  naver_map_url         TEXT,
+  -- 영업 시간 (JSON: {open: 8, close: 22} — 24시간제. close < open 이면 익일 새벽까지)
+  open_hours            JSONB,
+  -- 운영자 기준 와이파이 상태
+  wifi_status           TEXT             CHECK (wifi_status IN ('ok', 'slow')),
+  last_wifi_update_at   TIMESTAMPTZ,
+  -- 운영자 검증 단계 (candidate → verified_basic → curated)
+  verification_status   TEXT             NOT NULL DEFAULT 'candidate'
+                          CHECK (verification_status IN (
+                            'candidate', 'verified_basic', 'curated',
+                            'needs_recheck', 'closed'
+                          )),
+  last_verified_at      TIMESTAMPTZ,
+  verification_sources  JSONB,           -- {"naverLocal": true, "manualCheck": true, ...}
+  curator_note          TEXT,
+  status                TEXT             NOT NULL DEFAULT 'pending'
+                          CHECK (status IN ('active', 'pending', 'closed')),
+  created_at            TIMESTAMPTZ      NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ      NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_cafes_status   ON cafes (status);
-CREATE INDEX idx_cafes_district ON cafes (district);
-CREATE INDEX idx_cafes_dong     ON cafes (district, dong);
+CREATE INDEX idx_cafes_status       ON cafes (status);
+CREATE INDEX idx_cafes_district     ON cafes (district);
+CREATE INDEX idx_cafes_dong         ON cafes (district, dong);
+CREATE INDEX idx_cafes_verification ON cafes (verification_status);
 
 -- TODO: RLS — 일반 사용자는 status='active' 행만 SELECT 가능
 -- ALTER TABLE cafes ENABLE ROW LEVEL SECURITY;
@@ -76,6 +91,9 @@ CREATE TABLE cafe_attributes (
   coffee_score     SMALLINT    NOT NULL DEFAULT 0 CHECK (coffee_score     BETWEEN 0 AND 5),
   dessert_score    SMALLINT    NOT NULL DEFAULT 0 CHECK (dessert_score    BETWEEN 0 AND 5),
   late_open_score  SMALLINT    NOT NULL DEFAULT 0 CHECK (late_open_score  BETWEEN 0 AND 5),
+  space_score      SMALLINT    NOT NULL DEFAULT 0 CHECK (space_score      BETWEEN 0 AND 5),  -- 공간 크기
+  seat_score       SMALLINT    NOT NULL DEFAULT 0 CHECK (seat_score       BETWEEN 0 AND 5),  -- 개인 좌석 편의성
+  group_seat_score SMALLINT    NOT NULL DEFAULT 0 CHECK (group_seat_score BETWEEN 0 AND 5),  -- 단체석 가용성
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (cafe_id)  -- 카페당 속성 1행 보장
@@ -228,7 +246,7 @@ CREATE TABLE user_suggestions (
   reason         TEXT        NOT NULL DEFAULT '',
   tags           TEXT[]      NOT NULL DEFAULT ARRAY[]::TEXT[],
   review_status  TEXT        NOT NULL DEFAULT 'pending'
-                   CHECK (review_status IN ('pending', 'approved', 'rejected')),
+                   CHECK (review_status IN ('pending', 'approved', 'rejected', 'needs_check')),
   reviewer_note  TEXT,                    -- 운영자 검수 메모
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
   reviewed_at    TIMESTAMPTZ             -- 검수 완료 시각
@@ -259,38 +277,178 @@ CREATE TABLE raw_cafe_candidates (
   candidate_name      TEXT         NOT NULL,
   candidate_address   TEXT,
   candidate_url       TEXT,
-  extracted_keywords  TEXT[]       NOT NULL DEFAULT ARRAY[]::TEXT[],
-  confidence_score    NUMERIC(4,2) NOT NULL DEFAULT 0
-                        CHECK (confidence_score BETWEEN 0 AND 1),
-  review_status       TEXT         NOT NULL DEFAULT 'pending'
-                        CHECK (review_status IN ('pending', 'approved', 'rejected')),
+  extracted_keywords   TEXT[]       NOT NULL DEFAULT ARRAY[]::TEXT[],
+  extracted_attributes JSONB        NOT NULL DEFAULT '{}',   -- 텍스트에서 추출한 속성 후보 (wifi, outlet 등)
+  confidence_score     NUMERIC(4,2) NOT NULL DEFAULT 0
+                         CHECK (confidence_score BETWEEN 0 AND 1),
+  -- place_verifications 최선 결과 요약 (비정규화 — 빠른 조회용)
+  existence_status     TEXT
+                         CHECK (existence_status IN (
+                           'confirmed', 'likely', 'uncertain',
+                           'not_found', 'closed_suspected', 'closed_confirmed'
+                         )),
+  review_status        TEXT         NOT NULL DEFAULT 'pending'
+                         CHECK (review_status IN ('pending', 'approved', 'rejected')),
   created_at          TIMESTAMPTZ  NOT NULL DEFAULT now(),
   reviewed_at         TIMESTAMPTZ
 );
 
 CREATE INDEX idx_raw_candidates_status      ON raw_cafe_candidates (review_status);
 CREATE INDEX idx_raw_candidates_source_type ON raw_cafe_candidates (source_type);
+-- 동일 정규화 이름의 중복 후보 방지 (collect 스크립트의 normalizePlaceName 기준)
+CREATE UNIQUE INDEX idx_raw_candidates_name ON raw_cafe_candidates (candidate_name);
 
 -- TODO: RLS — 운영자만 전체 접근
 -- ALTER TABLE raw_cafe_candidates ENABLE ROW LEVEL SECURITY;
 
 
 -- ================================================================
+-- 10. place_verifications — 후보 카페 실존 검증 결과
+--     TypeScript: src/types/candidate.ts `PlaceVerification`
+--
+-- ⚠️ API 응답 원문 저장 금지 — 매칭 점수와 상태값만 보관합니다.
+--    matched_name / matched_address는 매칭에 사용한 값이며 원본 API 응답 전문이 아닙니다.
+-- ================================================================
+CREATE TABLE place_verifications (
+  id                  UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+  candidate_id        UUID         NOT NULL REFERENCES raw_cafe_candidates(id) ON DELETE CASCADE,
+  provider            TEXT         NOT NULL
+                        CHECK (provider IN ('naver_local', 'google_places', 'manual')),
+  query_name          TEXT         NOT NULL,     -- 검색에 사용한 카페명 (candidate_name 원본)
+  query_address       TEXT,                      -- 검색에 사용한 주소
+  matched_name        TEXT,                      -- API 결과에서 가장 잘 매칭된 명칭
+  matched_address     TEXT,                      -- API 결과에서 매칭된 주소
+  name_match_score    NUMERIC(4,3) NOT NULL DEFAULT 0
+                        CHECK (name_match_score    BETWEEN 0 AND 1),
+  address_match_score NUMERIC(4,3) NOT NULL DEFAULT 0
+                        CHECK (address_match_score BETWEEN 0 AND 1),
+  overall_match_score NUMERIC(4,3) NOT NULL DEFAULT 0
+                        CHECK (overall_match_score BETWEEN 0 AND 1),
+  existence_status    TEXT         NOT NULL DEFAULT 'uncertain'
+                        CHECK (existence_status IN (
+                          'confirmed', 'likely', 'uncertain',
+                          'not_found', 'closed_suspected', 'closed_confirmed'
+                        )),
+  verified_at         TIMESTAMPTZ  NOT NULL DEFAULT now(),
+  created_at          TIMESTAMPTZ  NOT NULL DEFAULT now()
+  -- ⚠️ 리뷰·이미지·외부 평점 등 원문 필드는 여기에 추가하지 마세요.
+);
+
+CREATE INDEX idx_place_verif_candidate   ON place_verifications (candidate_id);
+CREATE INDEX idx_place_verif_status      ON place_verifications (existence_status);
+CREATE INDEX idx_place_verif_provider    ON place_verifications (provider);
+
+-- TODO: RLS — 운영자만 접근
+-- ALTER TABLE place_verifications ENABLE ROW LEVEL SECURITY;
+
+
+-- ================================================================
+-- 11. wifi_reports — 사용자 와이파이 상태 제보
+--     현재: localStorage `wifi_report_{cafeId}` 대체 예정
+-- ================================================================
+CREATE TABLE wifi_reports (
+  id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  cafe_id     UUID        NOT NULL REFERENCES cafes(id) ON DELETE CASCADE,
+  anon_key    TEXT        NOT NULL,
+  status      TEXT        NOT NULL CHECK (status IN ('ok', 'slow')),
+  reported_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_wifi_reports_cafe_id  ON wifi_reports (cafe_id, reported_at DESC);
+CREATE INDEX idx_wifi_reports_anon_key ON wifi_reports (anon_key);
+
+-- TODO: RLS — INSERT는 누구나, 자신의 행은 SELECT 가능, 집계는 service_role 처리
+-- ALTER TABLE wifi_reports ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY "insert_wifi_report" ON wifi_reports FOR INSERT WITH CHECK (true);
+-- CREATE POLICY "own_wifi_report" ON wifi_reports FOR SELECT
+--   USING (anon_key = current_setting('app.current_anon_key', true));
+
+
+-- ================================================================
+-- 12. cafe_themes — 테마 큐레이션 헤더
+--     TypeScript: src/data/themes.ts CAFE_THEMES (현재 정적 데이터 대체 예정)
+-- ================================================================
+CREATE TABLE cafe_themes (
+  id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  theme_key   TEXT        NOT NULL UNIQUE,  -- 예: 'weekly', 'night_study', 'team_project'
+  icon        TEXT        NOT NULL DEFAULT '',
+  title       TEXT        NOT NULL,
+  description TEXT        NOT NULL DEFAULT '',
+  is_active   BOOLEAN     NOT NULL DEFAULT true,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_cafe_themes_active ON cafe_themes (is_active);
+
+-- TODO: RLS — SELECT는 누구나(is_active=true 행), INSERT/UPDATE/DELETE는 운영자만
+-- ALTER TABLE cafe_themes ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY "read_active_themes" ON cafe_themes
+--   FOR SELECT USING (is_active = true);
+
+CREATE TRIGGER set_cafe_themes_updated_at
+  BEFORE UPDATE ON cafe_themes
+  FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();
+
+
+-- ================================================================
+-- 13. cafe_theme_picks — 테마별 추천 카페 목록 (cafe_themes 1:N)
+--     TypeScript: CafeTheme.picks[].cafeId + reason
+-- ================================================================
+CREATE TABLE cafe_theme_picks (
+  id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  theme_id      UUID        NOT NULL REFERENCES cafe_themes(id) ON DELETE CASCADE,
+  cafe_id       UUID        NOT NULL REFERENCES cafes(id) ON DELETE CASCADE,
+  reason        TEXT        NOT NULL DEFAULT '',
+  display_order SMALLINT    NOT NULL DEFAULT 0,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (theme_id, cafe_id)
+);
+
+CREATE INDEX idx_theme_picks_theme_id ON cafe_theme_picks (theme_id, display_order);
+CREATE INDEX idx_theme_picks_cafe_id  ON cafe_theme_picks (cafe_id);
+
+-- TODO: RLS — cafe_themes 정책과 연동 (활성 테마의 픽만 공개)
+-- ALTER TABLE cafe_theme_picks ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY "read_active_theme_picks" ON cafe_theme_picks
+--   FOR SELECT USING (
+--     EXISTS (SELECT 1 FROM cafe_themes WHERE id = theme_id AND is_active = true)
+--   );
+
+
+-- ================================================================
 -- TypeScript ↔ SQL 컬럼 네이밍 비교 (참고용)
 -- ================================================================
--- TS camelCase          → SQL snake_case
--- cafe.openHoursSummary → cafes.open_hours_summary
--- cafe.is24Hours        → cafes.is_24_hours
--- cafe.naverMapUrl      → cafes.naver_map_url
--- attr.quietScore       → cafe_attributes.quiet_score
--- attr.soloScore        → cafe_attributes.solo_score
--- attr.groupScore       → cafe_attributes.group_score
--- attr.outletScore      → cafe_attributes.outlet_score
--- attr.wifiScore        → cafe_attributes.wifi_score
--- attr.stayScore        → cafe_attributes.stay_score
--- attr.coffeeScore      → cafe_attributes.coffee_score
--- attr.dessertScore     → cafe_attributes.dessert_score
--- attr.lateOpenScore    → cafe_attributes.late_open_score
--- candidate.sourceType  → raw_cafe_candidates.source_type
--- candidate.reviewStatus→ raw_cafe_candidates.review_status / user_suggestions.review_status
+-- TS camelCase               → SQL snake_case
+-- cafe.openHoursSummary      → cafes.open_hours_summary
+-- cafe.openHours             → cafes.open_hours (JSONB)
+-- cafe.is24Hours             → cafes.is_24_hours
+-- cafe.naverMapUrl           → cafes.naver_map_url
+-- cafe.wifiStatus            → cafes.wifi_status
+-- cafe.lastWifiUpdateAt      → cafes.last_wifi_update_at
+-- cafe.verificationStatus    → cafes.verification_status
+-- cafe.lastVerifiedAt        → cafes.last_verified_at
+-- cafe.verificationSources   → cafes.verification_sources (JSONB)
+-- cafe.curatorNote           → cafes.curator_note
+-- attr.quietScore            → cafe_attributes.quiet_score
+-- attr.soloScore             → cafe_attributes.solo_score
+-- attr.groupScore            → cafe_attributes.group_score
+-- attr.outletScore           → cafe_attributes.outlet_score
+-- attr.wifiScore             → cafe_attributes.wifi_score
+-- attr.stayScore             → cafe_attributes.stay_score
+-- attr.coffeeScore           → cafe_attributes.coffee_score
+-- attr.dessertScore          → cafe_attributes.dessert_score
+-- attr.lateOpenScore         → cafe_attributes.late_open_score
+-- attr.spaceScore            → cafe_attributes.space_score
+-- attr.seatScore             → cafe_attributes.seat_score
+-- attr.groupSeatScore        → cafe_attributes.group_seat_score
+-- candidate.sourceType       → raw_cafe_candidates.source_type
+-- candidate.reviewStatus     → raw_cafe_candidates.review_status / user_suggestions.review_status
+-- candidate.extractedAttributes → raw_cafe_candidates.extracted_attributes (JSONB)
+-- candidate.existenceStatus  → raw_cafe_candidates.existence_status
+-- WifiReport.status          → wifi_reports.status
+-- WifiReport.reportedAt      → wifi_reports.reported_at
+-- CafeTheme (id/key/icon...) → cafe_themes
+-- CafeTheme.picks            → cafe_theme_picks
 -- ================================================================

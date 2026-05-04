@@ -1,5 +1,8 @@
 import type { Cafe } from "../types/cafe";
 import { TagBadge } from "./TagBadge";
+import { VerificationBadge } from "./VerificationBadge";
+import { ScoreBar } from "./ScoreBar";
+import { StatusBadge, getOpenStatus } from "./StatusBadge";
 import "../styles/components.css";
 
 type Props = {
@@ -28,6 +31,7 @@ export function CafeCard({
   const isPrimary = variant === "primary";
   const hasHighlights = Array.isArray(highlights) && highlights.length > 0;
   const visibleTags = hasHighlights ? [] : cafe.tags.slice(0, 3);
+  const openStatus = getOpenStatus(cafe);
 
   return (
     <div
@@ -52,7 +56,10 @@ export function CafeCard({
 
       <div className="cafe-card__header">
         <div className="cafe-card__title-row">
-          <span className="cafe-card__name">{cafe.name}</span>
+          <div className="cafe-card__name-group">
+            <span className="cafe-card__name">{cafe.name}</span>
+            <VerificationBadge status={cafe.verificationStatus} size="sm" />
+          </div>
           {onFavoriteClick && (
             <button
               type="button"
@@ -67,6 +74,12 @@ export function CafeCard({
         </div>
 
         <div className="cafe-card__meta">
+          {openStatus && (
+            <>
+              <StatusBadge status={openStatus} />
+              <span className="cafe-card__dot">·</span>
+            </>
+          )}
           <span className="cafe-card__location">{cafe.district} {cafe.dong}</span>
           {distanceLabel && (
             <>
@@ -98,6 +111,12 @@ export function CafeCard({
           ))}
         </div>
       )}
+
+      <div className="cafe-card__score-bars">
+        <ScoreBar label="콘센트" score={cafe.attributes.outletScore} />
+        <ScoreBar label="공간" score={cafe.attributes.spaceScore} />
+        <ScoreBar label="단체석" score={cafe.attributes.groupSeatScore} />
+      </div>
 
       {reasons && reasons.length > 0 && (
         <div className="cafe-card__reasons">

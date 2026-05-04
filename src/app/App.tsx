@@ -8,16 +8,39 @@ import { FavoritesPage } from "../pages/FavoritesPage";
 import { RecentViewsPage } from "../pages/RecentViewsPage";
 import { SuggestCafePage } from "../pages/SuggestCafePage";
 import { ServiceInfoPage } from "../pages/ServiceInfoPage";
+import { ThemeCafesPage } from "../pages/ThemeCafesPage";
+import { AdminCandidateListPage } from "../pages/admin/AdminCandidateListPage";
+import { AdminLoginPage } from "../pages/admin/AdminLoginPage";
 import { getFavorites, toggleFavorite } from "../services/favoriteService";
 import { getRecentViews } from "../services/recentViewService";
 import { trackEvent } from "../services/logService";
+import { initCafeService } from "../services/cafeService";
 import type { Cafe } from "../types/cafe";
 import "../styles/globals.css";
 
+// ?mode=admin — 내부 운영자 전용 진입점. 일반 사용자 navStack과 완전히 분리.
+const IS_ADMIN_MODE = new URLSearchParams(window.location.search).get("mode") === "admin";
+
+// ?entry= 딥링크 — 앱인토스 기능 등록 및 직접 진입 지원.
+// 알 수 없는 entry는 home으로 fallback.
+function parseEntryNav(): NavState[] {
+  const entry = new URLSearchParams(window.location.search).get("entry");
+  switch (entry) {
+    case "best":    return [{ page: "home" }, { page: "districtBest" }];
+    case "suggest": return [{ page: "home" }, { page: "suggestCafe" }];
+    case "theme":   return [{ page: "home" }, { page: "themeCafes" }];
+    default:        return [{ page: "home" }];
+  }
+}
+const INITIAL_NAV = parseEntryNav();
+
 export function App() {
-  const [navStack, setNavStack] = useState<NavState[]>([{ page: "home" }]);
+  const [navStack, setNavStack] = useState<NavState[]>(INITIAL_NAV);
   const [favorites, setFavorites] = useState<string[]>(() => getFavorites());
   const [recentViews, setRecentViews] = useState<string[]>(() => getRecentViews());
+  const [adminAuthed, setAdminAuthed] = useState(
+    () => IS_ADMIN_MODE && sessionStorage.getItem("kagong_admin_session") === "ok"
+  );
   const nav = navStack[navStack.length - 1];
 
   // UI 버튼의 pop()이 history.back()을 호출할 때 popstate가 추가로 발생해
@@ -33,6 +56,10 @@ export function App() {
 
     // 홈 화면 진입 시 history entry 기준점을 확보합니다.
     history.replaceState(null, "");
+    // 딥링크로 홈 위에 스택이 있을 경우 Android 뒤로가기가 동작하도록 추가 entry를 쌓습니다.
+    for (let i = 1; i < INITIAL_NAV.length; i++) {
+      history.pushState(null, "");
+    }
 
     function handlePopState() {
       if (suppressNextPopState.current) {
@@ -45,11 +72,17 @@ export function App() {
 
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Supabase 모드일 때 캐시를 미리 채움 (mock 모드에서는 무동작)
+  useEffect(() => {
+    initCafeService();
+  }, []);
 
   // 홈 또는 최근 본 카페 화면 진입 시 localStorage와 동기화
   useEffect(() => {
     if (nav.page === "home" || nav.page === "recentViews") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage 외부 저장소를 React state와 동기화하는 의도적 패턴
       setRecentViews(getRecentViews());
     }
   }, [nav.page]);
@@ -89,6 +122,21 @@ export function App() {
     push({ page: "cafeDetail", cafe, distanceLabel });
   }
 
+  if (IS_ADMIN_MODE) {
+    if (!adminAuthed) {
+      return <AdminLoginPage onLogin={() => setAdminAuthed(true)} />;
+    }
+    return (
+      <AdminCandidateListPage
+        onBack={() => history.back()}
+        onLogout={() => {
+          sessionStorage.removeItem("kagong_admin_session");
+          setAdminAuthed(false);
+        }}
+      />
+    );
+  }
+
   switch (nav.page) {
     case "home":
       return (
@@ -97,6 +145,7 @@ export function App() {
             push({ page: "recommendations", preference, userLocation })
           }
           onDistrictBest={() => push({ page: "districtBest" })}
+          onThemeCafesClick={() => push({ page: "themeCafes" })}
           onFavoritesClick={() => push({ page: "favorites" })}
           favoritesCount={favorites.length}
           onRecentViewsClick={handleOpenRecentViews}
@@ -126,7 +175,7 @@ export function App() {
           onBack={pop}
           onFavoriteClick={handleFavoriteToggle}
           isFavorite={favorites.includes(nav.cafe.id)}
-          onSuggestClick={() => push({ page: "suggestCafe" })}
+          onSuggestClick={(cafeId, cafeName) => push({ page: "suggestCafe", targetCafeId: cafeId, targetCafeName: cafeName })}
         />
       );
 
@@ -159,9 +208,26 @@ export function App() {
       );
 
     case "suggestCafe":
-      return <SuggestCafePage onBack={pop} />;
+      return (
+        <SuggestCafePage
+          onBack={pop}
+          mode={nav.targetCafeId ? "update" : "new"}
+          targetCafeId={nav.targetCafeId}
+          targetCafeName={nav.targetCafeName}
+        />
+      );
 
     case "serviceInfo":
-      return <ServiceInfoPage onBack={pop} />;
+      return <ServiceInfoPage onBack={pop} onSuggestClick={() => push({ page: "suggestCafe" })} />;
+
+    case "themeCafes":
+      return (
+        <ThemeCafesPage
+          onCafeClick={handleCafeClick}
+          onBack={pop}
+          favoriteIds={favorites}
+          onFavoriteToggle={handleFavoriteToggle}
+        />
+      );
   }
 }

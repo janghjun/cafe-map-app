@@ -1,13 +1,28 @@
 import { safeGet, safeSet, isStringArray } from "../utils/safeStorage";
+import { getAnonymousUserId } from "./userIdentityService";
 
-const KEY = "kagong_favorites";
+const LEGACY_KEY = "kagong_favorites";
+
+function userKey(): string {
+  return `kagong_favorites_${getAnonymousUserId()}`;
+}
 
 function read(): string[] {
-  return safeGet(KEY, [], isStringArray);
+  const key = userKey();
+
+  // 기존 키에 데이터가 있고 사용자 키에는 없는 경우 한 번만 migration
+  const existing = safeGet(key, null, isStringArray);
+  if (existing !== null) return existing;
+
+  const legacy = safeGet(LEGACY_KEY, [], isStringArray);
+  if (legacy.length > 0) {
+    safeSet(key, legacy);
+  }
+  return legacy;
 }
 
 function write(ids: string[]): void {
-  safeSet(KEY, ids);
+  safeSet(userKey(), ids);
 }
 
 export function getFavorites(): string[] {
@@ -28,5 +43,6 @@ export function removeFavorite(cafeId: string): void {
 }
 
 export function toggleFavorite(cafeId: string): void {
-  isFavorite(cafeId) ? removeFavorite(cafeId) : addFavorite(cafeId);
+  if (isFavorite(cafeId)) removeFavorite(cafeId);
+  else addFavorite(cafeId);
 }

@@ -1,10 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Cafe } from "../types/cafe";
 import { AttributeSummary } from "../components/AttributeSummary";
 import { TagBadge } from "../components/TagBadge";
+import { VerificationBadge } from "../components/VerificationBadge";
 import { getCafeMapUrl } from "../utils/naverMap";
 import { addRecentView } from "../services/recentViewService";
 import { trackEvent } from "../services/logService";
+import {
+  getWifiReport,
+  saveWifiReport,
+  formatReportAge,
+  type WifiReport,
+  type WifiReportStatus,
+} from "../services/wifiReportService";
 import "../styles/pages.css";
 
 function buildStudySummary(cafe: Cafe): string[] {
@@ -72,7 +80,7 @@ type Props = {
   onBack: () => void;
   onFavoriteClick?: (cafe: Cafe) => void;
   isFavorite?: boolean;
-  onSuggestClick?: () => void;
+  onSuggestClick?: (cafeId: string, cafeName: string) => void;
 };
 
 export function CafeDetailPage({
@@ -87,6 +95,14 @@ export function CafeDetailPage({
     addRecentView(cafe.id);
     trackEvent("cafe_detail_view", { cafeId: cafe.id, cafeDistrict: cafe.district });
   }, [cafe.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const [wifiReport, setWifiReport] = useState<WifiReport | null>(() => getWifiReport(cafe.id));
+
+  function handleWifiReport(status: WifiReportStatus) {
+    const report = saveWifiReport(cafe.id, status);
+    setWifiReport(report);
+    trackEvent("wifi_reported", { cafeId: cafe.id, status });
+  }
 
   const mapUrl = getCafeMapUrl(cafe);
 
@@ -112,12 +128,28 @@ export function CafeDetailPage({
         {cafe.openHoursSummary && (
           <p className="detail-hours">{cafe.openHoursSummary}</p>
         )}
+        <div className="detail-verification">
+          <VerificationBadge status={cafe.verificationStatus} size="md" />
+          {cafe.lastVerifiedAt && (
+            <span className="detail-verified-date">
+              {cafe.lastVerifiedAt.slice(0, 7).replace("-", ".") + " 기준"}
+            </span>
+          )}
+        </div>
       </section>
 
       {/* 한 줄 요약 */}
       {cafe.summary && (
         <section className="detail-section">
           <p className="detail-summary">"{cafe.summary}"</p>
+        </section>
+      )}
+
+      {/* 운영자 메모 */}
+      {cafe.curatorNote && (
+        <section className="detail-section">
+          <h2 className="detail-section__label">운영자 메모</h2>
+          <p className="detail-curator-note">{cafe.curatorNote}</p>
         </section>
       )}
 
@@ -145,6 +177,37 @@ export function CafeDetailPage({
           </div>
         </section>
       )}
+
+      {/* 와이파이 제보 */}
+      <section className="detail-section">
+        <h2 className="detail-section__label">📶 와이파이 상태</h2>
+        <div className="wifi-report">
+          <div className="wifi-report__actions">
+            <button
+              type="button"
+              className={`wifi-report-btn wifi-report-btn--ok${wifiReport?.status === "ok" ? " wifi-report-btn--active" : ""}`}
+              onClick={() => handleWifiReport("ok")}
+            >
+              👍 괜찮아요
+            </button>
+            <button
+              type="button"
+              className={`wifi-report-btn wifi-report-btn--slow${wifiReport?.status === "slow" ? " wifi-report-btn--active" : ""}`}
+              onClick={() => handleWifiReport("slow")}
+            >
+              ⚠️ 느려요
+            </button>
+          </div>
+          {wifiReport ? (
+            <p className="wifi-report__meta">
+              내 제보: <strong>{wifiReport.status === "ok" ? "괜찮아요" : "느려요"}</strong> · {formatReportAge(wifiReport.reportedAt)}
+            </p>
+          ) : (
+            <p className="wifi-report__meta">방문 후 와이파이 상태를 제보해 주세요.</p>
+          )}
+          <p className="wifi-report__hint">내 기기에만 저장되며 즉시 공개되지 않아요.</p>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="detail-cta">
@@ -177,7 +240,7 @@ export function CafeDetailPage({
       <div className="page-footer-link">
         <p className="detail-footnote">카공 적합도는 직접 수집한 기준이에요. 실제 운영 상황은 방문 전 확인해주세요.</p>
         {onSuggestClick && (
-          <button type="button" className="btn-text" onClick={onSuggestClick}>
+          <button type="button" className="btn-text" onClick={() => onSuggestClick(cafe.id, cafe.name)}>
             정보가 다른가요? 수정 제안하기 →
           </button>
         )}

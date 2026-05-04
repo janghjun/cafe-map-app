@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import type { Cafe } from "../types/cafe";
-import { getCafes, getCafesByDistrict } from "../services/cafeService";
+import { getCafesSync } from "../services/cafeService";
 import { getCafeHighlights } from "../utils/cafeHighlights";
 import { searchCafes } from "../utils/searchCafes";
 import { CafeCard } from "../components/CafeCard";
+import { MiniMapPreview } from "../components/MiniMapPreview";
 import { FilterChip } from "../components/FilterChip";
 import { SearchInput } from "../components/SearchInput";
 import { EmptyState } from "../components/EmptyState";
@@ -47,7 +48,7 @@ export function DistrictBestPage({ onCafeClick, onBack }: Props) {
 
   useEffect(() => { trackEvent("district_best_view"); }, []);
 
-  const allCafes = getCafes();
+  const allCafes = getCafesSync();
   const activeCafes = allCafes.filter((c) => c.status === "active");
   const districts = getDistricts(activeCafes);
   const dongs = selectedDistrict ? getDongs(activeCafes, selectedDistrict) : [];
@@ -70,7 +71,12 @@ export function DistrictBestPage({ onCafeClick, onBack }: Props) {
   }
 
   const filteredCafes = selectedDistrict
-    ? getCafesByDistrict(selectedDistrict, selectedDong !== "전체" ? selectedDong : undefined)
+    ? allCafes.filter(
+        (c) =>
+          c.status === "active" &&
+          c.district === selectedDistrict &&
+          (selectedDong === "전체" || c.dong === selectedDong)
+      )
     : [];
 
   const rankedCafes = [...filteredCafes]
@@ -104,7 +110,7 @@ export function DistrictBestPage({ onCafeClick, onBack }: Props) {
           {searchResults.length === 0 ? (
             <EmptyState
               title="검색 결과가 없어요"
-              description="카페명, 구, 동, 태그로 검색할 수 있어요."
+              description="카페명, 구, 동, 태그로 카공 카페를 찾아볼 수 있어요."
             />
           ) : (
             <>
@@ -173,8 +179,8 @@ export function DistrictBestPage({ onCafeClick, onBack }: Props) {
         <section className="district-result">
           {rankedCafes.length === 0 ? (
             <EmptyState
-              title="등록된 카페가 없어요"
-              description="다른 구/동을 선택하거나 카페를 제안해 주세요."
+              title="이 지역은 아직 준비 중이에요"
+              description="다른 구/동을 선택하거나 카페를 제안해 주시면 더 빨리 채울 수 있어요."
             />
           ) : (
             <>
@@ -182,6 +188,25 @@ export function DistrictBestPage({ onCafeClick, onBack }: Props) {
                 {selectedDistrict} {selectedDong !== "전체" ? selectedDong + " " : ""}
                 BEST {rankedCafes.length}곳
               </p>
+              <p className="district-region-summary">
+                {selectedDong !== "전체" ? selectedDong : selectedDistrict}에서 카공하기 좋은 카페를 모아봤어요.
+              </p>
+              <MiniMapPreview
+                points={rankedCafes.map((cafe) => ({
+                  id: cafe.id,
+                  name: cafe.name,
+                  lat: cafe.lat,
+                  lng: cafe.lng,
+                }))}
+                title="카페 위치 미리보기"
+                onMarkerClick={(cafeId) => {
+                  const cafe = rankedCafes.find((c) => c.id === cafeId);
+                  if (cafe) {
+                    trackEvent("cafe_card_click", { cafeId: cafe.id, cafeDistrict: cafe.district, source: "mini_map" });
+                    onCafeClick(cafe);
+                  }
+                }}
+              />
               <div className="cafe-list">
                 {rankedCafes.map((cafe, idx) => (
                   <CafeCard
