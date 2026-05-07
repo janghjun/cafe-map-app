@@ -12,6 +12,7 @@ import { ThemeCafesPage } from "../pages/ThemeCafesPage";
 import { AdminCandidateListPage } from "../pages/admin/AdminCandidateListPage";
 import { AdminLoginPage } from "../pages/admin/AdminLoginPage";
 import { Toast } from "../components/Toast";
+import { useTheme } from "../hooks/useTheme";
 import { getFavorites, toggleFavorite } from "../services/favoriteService";
 import { getRecentViews } from "../services/recentViewService";
 import { trackEvent } from "../services/logService";
@@ -36,6 +37,7 @@ function parseEntryNav(): NavState[] {
 const INITIAL_NAV = parseEntryNav();
 
 export function App() {
+  const [theme, toggleTheme] = useTheme();
   const [navStack, setNavStack] = useState<NavState[]>(INITIAL_NAV);
   const [favorites, setFavorites] = useState<string[]>(() => getFavorites());
   const [recentViews, setRecentViews] = useState<string[]>(() => getRecentViews());
@@ -145,8 +147,8 @@ export function App() {
     case "home":
       page = (
         <HomePage
-          onRecommend={(preference, userLocation) =>
-            push({ page: "recommendations", preference, userLocation })
+          onRecommend={(preference, userLocation, locationGranted) =>
+            push({ page: "recommendations", preference, userLocation, locationGranted })
           }
           onDistrictBest={() => push({ page: "districtBest" })}
           onThemeCafesClick={() => push({ page: "themeCafes" })}
@@ -155,6 +157,8 @@ export function App() {
           onRecentViewsClick={handleOpenRecentViews}
           recentViewsCount={recentViews.length}
           onServiceInfoClick={() => push({ page: "serviceInfo" })}
+          theme={theme}
+          onThemeToggle={toggleTheme}
         />
       );
       break;
@@ -164,6 +168,7 @@ export function App() {
         <RecommendationPage
           preference={nav.preference}
           userLocation={nav.userLocation}
+          locationGranted={nav.locationGranted}
           onCafeClick={handleCafeClick}
           onBack={pop}
           onDistrictBest={() => push({ page: "districtBest" })}

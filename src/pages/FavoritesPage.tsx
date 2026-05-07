@@ -201,7 +201,7 @@ export function FavoritesPage({ favoriteIds, onCafeClick, onFavoriteToggle, onBa
           className={`theme-tab${activeTab === "favorites" ? " theme-tab--active" : ""}`}
           onClick={() => setActiveTab("favorites")}
         >
-          ★ 즐겨찾기{favoriteIds.length > 0 ? ` (${favoriteIds.length})` : ""}
+          즐겨찾기{favoriteIds.length > 0 ? ` (${favoriteIds.length})` : ""}
         </button>
         <button
           type="button"
@@ -210,7 +210,7 @@ export function FavoritesPage({ favoriteIds, onCafeClick, onFavoriteToggle, onBa
           className={`theme-tab${activeTab === "courses" ? " theme-tab--active" : ""}`}
           onClick={() => setActiveTab("courses")}
         >
-          📍 카공 코스{courses.length > 0 ? ` (${courses.length})` : ""}
+          카공 코스{courses.length > 0 ? ` (${courses.length})` : ""}
         </button>
       </div>
 
@@ -218,6 +218,7 @@ export function FavoritesPage({ favoriteIds, onCafeClick, onFavoriteToggle, onBa
       {activeTab === "favorites" && (
         favoriteCafes.length === 0 ? (
           <EmptyState
+            mascotState="emptyFavorite"
             title="아직 저장한 카공 스팟이 없어요"
             description="카페 상세에서 ☆를 누르면 여기에 모아둘 수 있어요."
             actionLabel="카공 카페 찾아보기"
@@ -293,6 +294,7 @@ export function FavoritesPage({ favoriteIds, onCafeClick, onFavoriteToggle, onBa
 
           {courses.length === 0 && !isCreating && (
             <EmptyState
+              mascotState="thinking"
               title="아직 만든 코스가 없어요"
               description="여러 카페를 묶어 나만의 카공 루트를 만들어보세요."
             />

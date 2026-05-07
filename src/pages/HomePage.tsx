@@ -3,6 +3,7 @@ import type { UserPreference, PeopleType, MoodType } from "../types/cafe";
 import type { Coords } from "../utils/distance";
 import { RadiusSelector } from "../components/RadiusSelector";
 import { FilterChip } from "../components/FilterChip";
+import { MascotImage } from "../components/MascotImage";
 import { trackEvent } from "../services/logService";
 import { QUICK_PRESETS } from "../utils/quickPresets";
 import { getCafeCount } from "../services/cafeService";
@@ -11,10 +12,11 @@ import {
   getCurrentLocation,
   type LocationStatus,
 } from "../services/locationService";
+import type { Theme } from "../hooks/useTheme";
 import "../styles/pages.css";
 
 type Props = {
-  onRecommend: (preference: UserPreference, userLocation: Coords) => void;
+  onRecommend: (preference: UserPreference, userLocation: Coords, locationGranted: boolean) => void;
   onDistrictBest: () => void;
   onThemeCafesClick?: () => void;
   onFavoritesClick?: () => void;
@@ -22,23 +24,32 @@ type Props = {
   onRecentViewsClick?: () => void;
   recentViewsCount?: number;
   onServiceInfoClick?: () => void;
+  theme?: Theme;
+  onThemeToggle?: () => void;
 };
 
-export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFavoritesClick, favoritesCount, onRecentViewsClick, recentViewsCount, onServiceInfoClick }: Props) {
+export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFavoritesClick, favoritesCount, onRecentViewsClick, recentViewsCount, onServiceInfoClick, theme, onThemeToggle }: Props) {
   useEffect(() => { trackEvent("home_view"); }, []);
 
   const [locationStatus, setLocationStatus] = useState<LocationStatus>("idle");
   const [userLocation, setUserLocation] = useState<Coords>(getFallbackLocation);
 
+  const [locationRetried, setLocationRetried] = useState(false);
+
   async function handleRequestLocation() {
     setLocationStatus("loading");
-    const result = await getCurrentLocation();
+    const [result] = await Promise.all([
+      getCurrentLocation(),
+      new Promise<void>((r) => setTimeout(r, 700)),
+    ]);
     setUserLocation(result.coords);
     if (result.source === "gps") {
       setLocationStatus("granted");
+      setLocationRetried(false);
       trackEvent("location_permission_allow");
     } else {
       setLocationStatus("denied");
+      setLocationRetried(true);
       trackEvent("location_permission_deny");
     }
   }
@@ -101,7 +112,7 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
     };
     const conditionCount = [needOutlet, needWifi, needLateOpen, need24Hours, careCoffee, careDessert].filter(Boolean).length;
     trackEvent("recommendation_requested", { radius, peopleType, mood, conditionCount });
-    onRecommend(preference, userLocation);
+    onRecommend(preference, userLocation, locationStatus === "granted");
   }
 
   const cafeCount = getCafeCount();
@@ -109,20 +120,37 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
   return (
     <div className="home-page">
       <header className="home-hero">
-        <div className="home-hero__badge">
-          인천 카공 카페 {cafeCount}곳 수록
+        {onThemeToggle && (
+          <button
+            type="button"
+            className="home-hero__theme-btn"
+            onClick={onThemeToggle}
+            aria-label={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+          >
+            {theme === "dark" ? "☀️ 라이트" : "🌙 다크"}
+          </button>
+        )}
+        <div className="home-hero__inner">
+          <div className="home-hero__text">
+            <div className="home-hero__badge">
+              인천 카공 카페 {cafeCount}곳 수록
+            </div>
+            <h1 className="home-title">
+              카공 어디가?
+              <span className="home-title__sub">인천편</span>
+            </h1>
+            <p className="home-subtitle">지금 내 주변에서 공부하기 좋은 카페를 찾아드릴게요</p>
+          </div>
+          <div className="home-hero__mascot" aria-hidden="true">
+            <MascotImage state="heroMain" size="hero" decorative />
+          </div>
         </div>
-        <h1 className="home-title">
-          카공 어디가?
-          <span className="home-title__sub">인천편</span>
-        </h1>
-        <p className="home-subtitle">지금 내 주변에서 공부하기 좋은 카페를 찾아드릴게요</p>
       </header>
 
       <div className="home-body">
 
       <section className="home-section">
-        <h2 className="home-section__label">⚡ 빠른 선택</h2>
+        <h2 className="home-section__label">빠른 선택</h2>
         <div className="quick-presets">
           {QUICK_PRESETS.map((preset) => (
             <button
@@ -139,7 +167,7 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
       </section>
 
       <section className="home-section">
-        <h2 className="home-section__label">📍 내 위치</h2>
+        <h2 className="home-section__label">내 위치</h2>
         <div className="location-status-box">
           {locationStatus === "idle" && (
             <>
@@ -158,21 +186,27 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
           {(locationStatus === "denied" || locationStatus === "fallback") && (
             <>
               <p className="location-status location-status--warn">⚠ 인천 중심 기준으로 검색해요</p>
-              <button type="button" className="btn-location" onClick={handleRequestLocation}>
-                다시 시도하기
-              </button>
+              {locationRetried ? (
+                <p className="location-status" style={{ fontSize: "12px" }}>
+                  위치 권한이 거부되어 있어요. 브라우저 설정에서 허용 후 다시 시도해 주세요.
+                </p>
+              ) : (
+                <button type="button" className="btn-location" onClick={handleRequestLocation}>
+                  다시 시도하기
+                </button>
+              )}
             </>
           )}
         </div>
       </section>
 
       <section className="home-section">
-        <h2 className="home-section__label">📏 반경</h2>
+        <h2 className="home-section__label">반경</h2>
         <RadiusSelector value={radius} onChange={setRadius} />
       </section>
 
       <section className="home-section">
-        <h2 className="home-section__label">👤 인원</h2>
+        <h2 className="home-section__label">인원</h2>
         <div className="chip-row">
           <FilterChip label="혼자" selected={peopleType === "solo"} onClick={() => setPeopleType("solo")} />
           <FilterChip label="2~4명" selected={peopleType === "group_2_4"} onClick={() => setPeopleType("group_2_4")} />
@@ -181,7 +215,7 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
       </section>
 
       <section className="home-section">
-        <h2 className="home-section__label">🎧 분위기</h2>
+        <h2 className="home-section__label">분위기</h2>
         <div className="chip-row">
           <FilterChip label="조용한 곳" selected={mood === "quiet"} onClick={() => setMood("quiet")} />
           <FilterChip label="대화 가능한 곳" selected={mood === "talkable"} onClick={() => setMood("talkable")} />
@@ -189,7 +223,7 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
       </section>
 
       <section className="home-section">
-        <h2 className="home-section__label">✅ 조건</h2>
+        <h2 className="home-section__label">조건</h2>
         <div className="chip-row chip-row--wrap">
           <FilterChip label="콘센트"  selected={needOutlet}   onClick={() => setNeedOutlet(!needOutlet)} />
           <FilterChip label="와이파이" selected={needWifi}     onClick={() => setNeedWifi(!needWifi)} />
@@ -209,19 +243,19 @@ export function HomePage({ onRecommend, onDistrictBest, onThemeCafesClick, onFav
         </button>
         {onThemeCafesClick && (
           <button type="button" className="btn-secondary" onClick={onThemeCafesClick}>
-            ✨ 테마 카공 추천 보기
+            테마 카공 추천 보기
           </button>
         )}
         {(onFavoritesClick || onRecentViewsClick) && (
           <div className="home-quick-links">
             {onFavoritesClick && (
               <button type="button" className="btn-text" onClick={onFavoritesClick}>
-                ★ 저장한 카페{favoritesCount ? ` (${favoritesCount})` : ""} 보기
+                저장한 카페{favoritesCount ? ` (${favoritesCount})` : ""} 보기
               </button>
             )}
             {onRecentViewsClick && (
               <button type="button" className="btn-text" onClick={onRecentViewsClick}>
-                🕐 최근 본 카페{recentViewsCount ? ` (${recentViewsCount})` : ""} 보기
+                최근 본 카페{recentViewsCount ? ` (${recentViewsCount})` : ""} 보기
               </button>
             )}
           </div>

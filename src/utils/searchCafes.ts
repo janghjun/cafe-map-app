@@ -1,4 +1,5 @@
 import type { Cafe } from "../types/cafe";
+import { calculateManualBoost } from "./recommendation";
 
 const TAG_KO: Record<string, string> = {
   quiet: "조용",
@@ -27,5 +28,6 @@ export function searchCafes(cafes: Cafe[], query: string): Cafe[] {
         c.tags.some(
           (t) => t.toLowerCase().includes(q) || (TAG_KO[t] ?? "").includes(q)
         )
-    );
+    )
+    .sort((a, b) => calculateManualBoost(b) - calculateManualBoost(a));
 }

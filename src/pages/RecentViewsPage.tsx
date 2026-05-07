@@ -48,6 +48,7 @@ export function RecentViewsPage({ recentIds, onCafeClick, onBack, onRecentViewsC
 
       {recentCafes.length === 0 ? (
         <EmptyState
+          mascotState="emptyResult"
           title="아직 둘러본 카페가 없어요"
           description="카공 카페를 구경하면 여기에 자동으로 기록돼요."
           actionLabel="카공 카페 찾아보기"

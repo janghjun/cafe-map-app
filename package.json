@@ -21,7 +21,12 @@
     "generate:mock": "tsx scripts/generate-mock-from-collected.ts",
     "generate:mock:custom": "tsx scripts/generate-mock-from-collected.ts --input",
     "expand:dataset": "tsx scripts/expand-dataset-from-sns.ts",
-    "expand:dataset:dry-run": "tsx scripts/expand-dataset-from-sns.ts --dry-run"
+    "expand:dataset:dry-run": "tsx scripts/expand-dataset-from-sns.ts --dry-run",
+    "load:manual-cafes": "tsx scripts/load-manual-kagong-dataset.ts",
+    "detect:manual-duplicates": "tsx scripts/detect-manual-cafe-duplicates.ts",
+    "verify:manual-cafes": "tsx scripts/verify-manual-kagong-cafes.ts",
+    "convert:manual-seed": "tsx scripts/convert-manual-to-cafe-seed.ts",
+    "plan:manual-merge": "tsx scripts/plan-manual-cafe-merge.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.1",

@@ -1,0 +1,531 @@
+{
+  "meta": {
+    "generatedAt": "2026-05-07T12:59:19.734Z",
+    "total": 65,
+    "verifiedBasic": 30,
+    "ambiguous": 24,
+    "notFound": 11
+  },
+  "report": [
+    {
+      "manualId": "manual-0001",
+      "name": "이그니토 커피컴퍼니 개항로",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.7692,
+      "matchedQuery": "이그니토 커피컴퍼니 개항로 인천",
+      "verifiedName": "이그니토 커피컴퍼니"
+    },
+    {
+      "manualId": "manual-0002",
+      "name": "그로잉라운지 석남",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.7188,
+      "matchedQuery": "그로잉라운지 석남 인천",
+      "verifiedName": "그로잉라운지"
+    },
+    {
+      "manualId": "manual-0003",
+      "name": "카페 꼼마 송도",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.6667,
+      "matchedQuery": "카페 꼼마 송도 인천",
+      "verifiedName": "카페꼼마 송도점"
+    },
+    {
+      "manualId": "manual-0004",
+      "name": "원스타임오프 인천시청점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "원스타임오프 인천시청점 인천",
+      "verifiedName": "원스타임오프 인천시청점"
+    },
+    {
+      "manualId": "manual-0005",
+      "name": "카페더블랙 구월점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "카페더블랙 구월점 인천",
+      "verifiedName": "카페더블랙 구월점"
+    },
+    {
+      "manualId": "manual-0006",
+      "name": "마호가니 인천구월점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "마호가니 인천구월점 인천",
+      "verifiedName": "마호가니 인천구월점"
+    },
+    {
+      "manualId": "manual-0007",
+      "name": "더노벰버 라운지 송도",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0008",
+      "name": "The november 라운지 구월점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "The november 라운지 구월점 인천",
+      "verifiedName": "the november 라운지 구월점"
+    },
+    {
+      "manualId": "manual-0009",
+      "name": "온음커피",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "온음커피 인천",
+      "verifiedName": "온음커피"
+    },
+    {
+      "manualId": "manual-0010",
+      "name": "이공커피 부평역점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "이공커피 부평역점 인천",
+      "verifiedName": "이공커피 부평역점"
+    },
+    {
+      "manualId": "manual-0011",
+      "name": "스왈로우 영종도",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5089,
+      "matchedQuery": "스왈로우 영종도 인천",
+      "verifiedName": "스왈로우"
+    },
+    {
+      "manualId": "manual-0012",
+      "name": "카페 더 스토리 인하대점",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.6161,
+      "matchedQuery": "카페 더 스토리 인하대점 인천",
+      "verifiedName": "카페더스토리 인하대점"
+    },
+    {
+      "manualId": "manual-0013",
+      "name": "피디커피 구월동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5714,
+      "matchedQuery": "피디커피 구월동 인천",
+      "verifiedName": "피디커피"
+    },
+    {
+      "manualId": "manual-0014",
+      "name": "셀렘 구월동",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0015",
+      "name": "bbrick 구월동",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0016",
+      "name": "아날로그 3호점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.7188,
+      "matchedQuery": "아날로그 3호점 인천",
+      "verifiedName": "아날로그3호점"
+    },
+    {
+      "manualId": "manual-0017",
+      "name": "혜리별관 구월동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5714,
+      "matchedQuery": "혜리별관 구월동 인천",
+      "verifiedName": "혜리별관"
+    },
+    {
+      "manualId": "manual-0018",
+      "name": "참새커피 구월동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5714,
+      "matchedQuery": "참새커피 구월동 인천",
+      "verifiedName": "참새커피"
+    },
+    {
+      "manualId": "manual-0019",
+      "name": "이그니토 커피 로스터스 구월동",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.6719,
+      "matchedQuery": "이그니토 커피 로스터스 구월동 인천",
+      "verifiedName": "이그니토 커피로스터스"
+    },
+    {
+      "manualId": "manual-0020",
+      "name": "콤비커피로스터스 구월동",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.7273,
+      "matchedQuery": "콤비커피로스터스 구월동 인천",
+      "verifiedName": "콤비커피로스터스"
+    },
+    {
+      "manualId": "manual-0021",
+      "name": "카페아들러 구월동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.625,
+      "matchedQuery": "카페아들러 구월동 인천",
+      "verifiedName": "카페아들러"
+    },
+    {
+      "manualId": "manual-0022",
+      "name": "카페 보레브 구월동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.475,
+      "matchedQuery": "카페 보레브 구월동 인천",
+      "verifiedName": "카페보레브"
+    },
+    {
+      "manualId": "manual-0023",
+      "name": "묵음 부평",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0024",
+      "name": "스탠다드 스퀘어 부평",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9318,
+      "matchedQuery": "스탠다드 스퀘어 부평 인천",
+      "verifiedName": "스탠다드 스퀘어 부평점"
+    },
+    {
+      "manualId": "manual-0025",
+      "name": "런 아모크 부평구청",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5208,
+      "matchedQuery": "런 아모크 부평구청",
+      "verifiedName": "런 아모크"
+    },
+    {
+      "manualId": "manual-0026",
+      "name": "하이테이블 부평점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "하이테이블 부평점 인천",
+      "verifiedName": "하이테이블 부평점"
+    },
+    {
+      "manualId": "manual-0027",
+      "name": "론트커피 부평",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.625,
+      "matchedQuery": "론트커피 부평 인천",
+      "verifiedName": "론트커피"
+    },
+    {
+      "manualId": "manual-0028",
+      "name": "이디야커피 부평로데오점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "이디야커피 부평로데오점 인천",
+      "verifiedName": "이디야커피 부평로데오점"
+    },
+    {
+      "manualId": "manual-0029",
+      "name": "투썸플레이스 부평시장역점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "투썸플레이스 부평시장역점 인천",
+      "verifiedName": "투썸플레이스 부평시장역점"
+    },
+    {
+      "manualId": "manual-0030",
+      "name": "모짜르트 부평",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.625,
+      "matchedQuery": "모짜르트 부평 인천",
+      "verifiedName": "모짜르트"
+    },
+    {
+      "manualId": "manual-0031",
+      "name": "카페에디토레 인천송도점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "카페에디토레 인천송도점 인천",
+      "verifiedName": "카페에디토레 인천송도점"
+    },
+    {
+      "manualId": "manual-0032",
+      "name": "기노스코 송도",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.625,
+      "matchedQuery": "기노스코 송도 인천",
+      "verifiedName": "기노스코"
+    },
+    {
+      "manualId": "manual-0033",
+      "name": "넌넌하우스 송도",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.6786,
+      "matchedQuery": "넌넌하우스 송도 인천",
+      "verifiedName": "넌넌하우스"
+    },
+    {
+      "manualId": "manual-0034",
+      "name": "보테가9 송도",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.625,
+      "matchedQuery": "보테가9 송도 인천",
+      "verifiedName": "보테가9"
+    },
+    {
+      "manualId": "manual-0035",
+      "name": "아티제 인천송도점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "아티제 인천송도점 인천",
+      "verifiedName": "아티제 인천송도점"
+    },
+    {
+      "manualId": "manual-0036",
+      "name": "이디야커피 송도타임스페이스점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "이디야커피 송도타임스페이스점 인천",
+      "verifiedName": "이디야커피 송도타임스페이스점"
+    },
+    {
+      "manualId": "manual-0037",
+      "name": "카페 와안 송도",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0038",
+      "name": "마음북카페 송도",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.6786,
+      "matchedQuery": "마음북카페 송도 인천",
+      "verifiedName": "마음북카페"
+    },
+    {
+      "manualId": "manual-0039",
+      "name": "디벨로핑룸 가좌점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "디벨로핑룸 가좌점 인천",
+      "verifiedName": "디벨로핑룸 가좌점"
+    },
+    {
+      "manualId": "manual-0040",
+      "name": "하이테이블 서구청",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.8542,
+      "matchedQuery": "하이테이블 서구청 인천",
+      "verifiedName": "하이테이블 서구청점"
+    },
+    {
+      "manualId": "manual-0041",
+      "name": "카페 첼리나 인천서구",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.625,
+      "matchedQuery": "카페 첼리나 인천서구 인천",
+      "verifiedName": "카페 첼리나"
+    },
+    {
+      "manualId": "manual-0042",
+      "name": "투썸플레이스 인천석남역점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "투썸플레이스 인천석남역점 인천",
+      "verifiedName": "투썸플레이스 인천석남역점"
+    },
+    {
+      "manualId": "manual-0043",
+      "name": "페이지37 청라",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.6786,
+      "matchedQuery": "페이지37 청라 인천",
+      "verifiedName": "페이지37"
+    },
+    {
+      "manualId": "manual-0044",
+      "name": "투썸플레이스 청라시티타워점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "투썸플레이스 청라시티타워점 인천",
+      "verifiedName": "투썸플레이스 청라시티타워점"
+    },
+    {
+      "manualId": "manual-0045",
+      "name": "베이지버터 계산동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.625,
+      "matchedQuery": "베이지버터 계산동 인천",
+      "verifiedName": "베이지버터"
+    },
+    {
+      "manualId": "manual-0046",
+      "name": "도도록 계양",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.4875,
+      "matchedQuery": "도도록 계양 인천",
+      "verifiedName": "도도록"
+    },
+    {
+      "manualId": "manual-0047",
+      "name": "스틸머그 계산동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5714,
+      "matchedQuery": "스틸머그 계산동 인천",
+      "verifiedName": "스틸머그"
+    },
+    {
+      "manualId": "manual-0048",
+      "name": "파스쿠찌 계양구청점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "파스쿠찌 계양구청점 인천",
+      "verifiedName": "파스쿠찌 계양구청점"
+    },
+    {
+      "manualId": "manual-0049",
+      "name": "바위커피 영종도",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5089,
+      "matchedQuery": "바위커피 영종도 인천",
+      "verifiedName": "바위커피"
+    },
+    {
+      "manualId": "manual-0050",
+      "name": "왓소요 운서역",
+      "verificationStatus": "not_found",
+      "confidence": 0.4375,
+      "matchedQuery": "왓소요 운서역 인천",
+      "verifiedName": "왓소요"
+    },
+    {
+      "manualId": "manual-0051",
+      "name": "카페 구읍 영종도",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0052",
+      "name": "카페 웜뱃 영종도",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5625,
+      "matchedQuery": "카페 웜뱃 영종도",
+      "verifiedName": "카페 웜뱃"
+    },
+    {
+      "manualId": "manual-0053",
+      "name": "913 인하대역",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0054",
+      "name": "카페빈스 인하대",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5089,
+      "matchedQuery": "카페빈스 인하대",
+      "verifiedName": "카페빈스"
+    },
+    {
+      "manualId": "manual-0055",
+      "name": "원더라운지 미추홀구",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5833,
+      "matchedQuery": "원더라운지 미추홀구 인천",
+      "verifiedName": "원더라운지"
+    },
+    {
+      "manualId": "manual-0056",
+      "name": "카페 더블랙 주안",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5,
+      "matchedQuery": "카페 더블랙 주안 인천",
+      "verifiedName": "카페더블랙"
+    },
+    {
+      "manualId": "manual-0057",
+      "name": "카페 헤르만 인하대",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.6042,
+      "matchedQuery": "카페 헤르만 인하대",
+      "verifiedName": "카페 헤르만"
+    },
+    {
+      "manualId": "manual-0058",
+      "name": "투썸플레이스 제물포역점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "투썸플레이스 제물포역점 인천",
+      "verifiedName": "투썸플레이스 제물포역점"
+    },
+    {
+      "manualId": "manual-0059",
+      "name": "카페 피너클 인천논현동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.5909,
+      "matchedQuery": "카페 피너클 인천논현동 인천",
+      "verifiedName": "카페 피너클"
+    },
+    {
+      "manualId": "manual-0060",
+      "name": "커피만나 인천라피에스타점",
+      "verificationStatus": "verified_basic",
+      "confidence": 1,
+      "matchedQuery": "커피만나 인천라피에스타점 인천",
+      "verifiedName": "커피만나 인천라피에스타점"
+    },
+    {
+      "manualId": "manual-0061",
+      "name": "트리플에이커피 소래포구점",
+      "verificationStatus": "verified_basic",
+      "confidence": 0.9375,
+      "matchedQuery": "트리플에이커피 소래포구점 인천",
+      "verifiedName": "트리플에이커피 소래포구점"
+    },
+    {
+      "manualId": "manual-0062",
+      "name": "카페 느린우체통 강화도",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0063",
+      "name": "앤드아워 동인천역",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0064",
+      "name": "어빌리지커피 로스터스 개항로",
+      "verificationStatus": "not_found",
+      "confidence": 0,
+      "matchedQuery": null,
+      "verifiedName": null
+    },
+    {
+      "manualId": "manual-0065",
+      "name": "포디움126 신포동",
+      "verificationStatus": "ambiguous",
+      "confidence": 0.6042,
+      "matchedQuery": "포디움126 신포동",
+      "verifiedName": "포디움126"
+    }
+  ]
+}

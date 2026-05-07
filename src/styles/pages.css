@@ -65,6 +65,30 @@
   overflow: hidden;
 }
 
+.home-hero__inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-hero__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.home-hero__mascot {
+  flex-shrink: 0;
+  align-self: flex-end;
+  margin-bottom: -12px;
+  opacity: 0.96;
+  max-width: 52%;
+}
+
+.home-hero__mascot img {
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.18));
+}
+
 .home-hero::after {
   content: "";
   position: absolute;
@@ -72,6 +96,31 @@
   height: 28px;
   background: linear-gradient(to top, var(--color-bg), transparent);
 }
+
+.home-hero__theme-btn {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  z-index: 10;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+.home-hero__theme-btn:hover  { background: rgba(255, 255, 255, 0.25); }
+.home-hero__theme-btn:active { transform: scale(0.95); }
 
 .home-hero__badge {
   display: inline-flex;
@@ -390,10 +439,30 @@
   color: var(--color-text-muted);
 }
 
+.wifi-report__meta-inline {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-text-subtle);
+}
+
 .wifi-report__hint {
   margin: 0;
   font-size: 11px;
   color: var(--color-text-subtle);
+}
+
+.wifi-report__feedback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0 2px;
+}
+
+.wifi-report__feedback-text {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
 
 /* ── Page footer link ── */
@@ -1102,6 +1171,13 @@
   gap: 12px;
 }
 
+.district-result__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .district-result__summary {
   margin: 0;
   font-size: 15px;
@@ -1151,4 +1227,305 @@
   font-size: 12px;
   color: var(--color-text-muted);
   font-style: normal;
+}
+
+/* ── detail-suggest-section (정보가 달라졌나요?) ── */
+.detail-suggest-section {
+  background: var(--color-surface-warm);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px !important;
+  gap: 12px !important;
+}
+
+.detail-suggest-section__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.detail-suggest-section__icon {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.detail-suggest-section__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.detail-suggest-section__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.detail-suggest-section__desc {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.detail-suggest-section__btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-brand);
+  background: transparent;
+  color: var(--color-brand);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.detail-suggest-section__btn:hover  { background-color: var(--color-surface-tint); }
+.detail-suggest-section__btn:active { transform: scale(0.98); }
+
+/* ── ServiceInfoPage (si-*) ── */
+.si-page {
+  padding: 0 16px calc(env(safe-area-inset-bottom, 0px) + 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.si-hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  padding: 24px 16px 22px;
+  background: var(--gradient-hero);
+  margin: 0 -16px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  margin-bottom: 16px;
+}
+
+.si-hero__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.si-hero__eyebrow {
+  margin: 0 0 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.si-hero__title {
+  margin: 0 0 7px;
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+
+.si-hero__desc {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.65;
+}
+
+/* 3원칙 배지 */
+.si-principles {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.si-principle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
+  padding: 13px 6px 12px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.si-principle__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.si-principle__label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.si-principle__desc {
+  font-size: 10.5px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* 정보 카드 */
+.si-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.si-card {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.si-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 11px;
+}
+
+.si-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  background: var(--color-brand);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.si-card__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.si-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.si-card__body p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* 적합도 기준 그리드 */
+.si-score-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+  background: var(--color-surface-warm);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  margin: 8px 0;
+}
+
+.si-score-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.si-score-item__label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-brand);
+}
+
+.si-score-item__desc {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.si-note {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--color-text-subtle);
+  font-style: italic;
+}
+
+/* FAQ 섹션 */
+.si-faq {
+  margin-bottom: 20px;
+}
+
+.si-faq__title {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── 추천 섹션 헤더 (레이블 + 카공냥) ── */
+.recommendation-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 4px 0 0;
+}
+
+.recommendation-section-header .recommendation-section-label {
+  margin: 0;
+}
+
+/* ── detail-section-header (레이블 전용) ── */
+.detail-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── ThemeCafesPage 탭 설명 + 카공냥 ── */
+.theme-desc-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.theme-desc-text {
+  flex: 1;
+  min-width: 0;
 }

@@ -1,7 +1,24 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(vercel env *)",
+      "Bash(npx playwright *)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(node -e ' *)",
+      "Bash(npm install *)",
+      "Bash(python3 -c ' *)",
+      "Bash([ -f \"/Users/janghyeongjun/cafe_map_app/$f\" ])",
+      "Bash(file /Users/janghyeongjun/cafe_map_app/img/cafe_app_light_logo* /Users/janghyeongjun/cafe_map_app/img/cafe_app_dark_logo*)",
+      "Bash(vercel --version)",
+      "Bash(vercel --prod)",
+      "Bash(cat /tmp/manual-cafes-ts.txt)",
+      "Read(//private/tmp/**)",
+      "Bash(python3)",
+      "Bash(python3 -)"
     ]
   }
 }

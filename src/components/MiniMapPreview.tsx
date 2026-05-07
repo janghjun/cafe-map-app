@@ -34,6 +34,10 @@ export function MiniMapPreview({
         />
       </div>
 
+      <p className="mini-map__osm-credit">
+        © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>
+      </p>
+
       <div className="mini-map__legend">
         {userLocation && <span className="mini-map__legend-me">● 내 위치</span>}
         {points.map((point, idx) => (

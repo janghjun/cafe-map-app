@@ -13,6 +13,7 @@ export type CafeVerificationSources = {
   naverLocal?: boolean;    // 네이버 지역 검색 API로 존재 확인
   kakaoLocal?: boolean;    // 카카오 로컬 API로 존재 확인
   manualCheck?: boolean;   // 운영자 직접 방문 또는 전화 확인
+  operatorVisit?: boolean; // 운영자 직접 방문 큐레이션
   userSuggestion?: boolean; // 사용자 제안 기반 등록
 };
 
@@ -69,6 +70,11 @@ export type Cafe = {
   lastVerifiedAt?: string;
   verificationSources?: CafeVerificationSources;
   curatorNote?: string;
+  manualBoostEligible?: boolean;
+  manualPriority?: "high" | "normal" | "low";
+  manualSourceId?: string;
+  studySignals?: string[];
+  suggestedTags?: string[];
 };
 
 export type PeopleType = "solo" | "group_2_4" | "group_5_plus";

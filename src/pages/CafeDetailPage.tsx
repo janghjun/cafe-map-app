@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Cafe } from "../types/cafe";
+import { MascotImage } from "../components/MascotImage";
 import { AttributeSummary } from "../components/AttributeSummary";
 import { TagBadge } from "../components/TagBadge";
 import { VerificationBadge } from "../components/VerificationBadge";
@@ -185,7 +186,7 @@ export function CafeDetailPage({
 
       {/* 와이파이 제보 */}
       <section className="detail-section">
-        <h2 className="detail-section__label">📶 와이파이 상태</h2>
+        <h2 className="detail-section__label">와이파이 상태</h2>
         <div className="wifi-report">
           <div className="wifi-report__actions">
             <button
@@ -193,20 +194,30 @@ export function CafeDetailPage({
               className={`wifi-report-btn wifi-report-btn--ok${wifiReport?.status === "ok" ? " wifi-report-btn--active" : ""}`}
               onClick={() => handleWifiReport("ok")}
             >
-              👍 괜찮아요
+              괜찮아요
             </button>
             <button
               type="button"
               className={`wifi-report-btn wifi-report-btn--slow${wifiReport?.status === "slow" ? " wifi-report-btn--active" : ""}`}
               onClick={() => handleWifiReport("slow")}
             >
-              ⚠️ 느려요
+              느려요
             </button>
           </div>
           {wifiReport ? (
-            <p className="wifi-report__meta">
-              내 제보: <strong>{wifiReport.status === "ok" ? "괜찮아요" : "느려요"}</strong> · {formatReportAge(wifiReport.reportedAt)}
-            </p>
+            <div className="wifi-report__feedback">
+              <MascotImage
+                state={wifiReport.status === "ok" ? "wifi" : "wifiBad"}
+                size="sm"
+                decorative
+              />
+              <p className="wifi-report__feedback-text">
+                {wifiReport.status === "ok"
+                  ? "빠른 와이파이라고 제보했어요"
+                  : "느린 와이파이라고 제보했어요"}
+                <span className="wifi-report__meta-inline"> · {formatReportAge(wifiReport.reportedAt)}</span>
+              </p>
+            </div>
           ) : (
             <p className="wifi-report__meta">방문 후 와이파이 상태를 제보해 주세요.</p>
           )}
@@ -214,14 +225,29 @@ export function CafeDetailPage({
         </div>
       </section>
 
-      {/* 데이터 기준 안내 + 정보 수정 제안 */}
+      {/* 정보 수정 제안 */}
+      {onSuggestClick && (
+        <section className="detail-section detail-suggest-section">
+          <div className="detail-suggest-section__body">
+            <span className="detail-suggest-section__icon">✏️</span>
+            <div className="detail-suggest-section__text">
+              <p className="detail-suggest-section__title">정보가 달라졌나요?</p>
+              <p className="detail-suggest-section__desc">운영 시간, 콘센트, 환경 등 변경된 내용을 알려주세요.</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="detail-suggest-section__btn"
+            onClick={() => onSuggestClick(cafe.id, cafe.name)}
+          >
+            수정 제안하기
+          </button>
+        </section>
+      )}
+
+      {/* 데이터 기준 안내 */}
       <div className="page-footer-link">
         <p className="detail-footnote">카공 적합도는 직접 수집한 기준이에요. 실제 운영 상황은 방문 전 확인해주세요.</p>
-        {onSuggestClick && (
-          <button type="button" className="btn-text" onClick={() => onSuggestClick(cafe.id, cafe.name)}>
-            정보가 다른가요? 수정 제안하기 →
-          </button>
-        )}
       </div>
 
       {/* Sticky CTA */}

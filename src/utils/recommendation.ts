@@ -3,6 +3,27 @@ import { calculateDistanceKm, isWithinRadius } from "./distance";
 import type { Coords } from "./distance";
 import { buildRecommendationReasons } from "./recommendationReason";
 
+export function calculateManualBoost(cafe: Cafe): number {
+  if (!cafe.manualBoostEligible) return 0;
+
+  let boost = 0;
+
+  // 운영자 직접 수집·큐레이션 — 최고 신뢰도 (직접 서치·검증한 카공 후보)
+  // curated: 운영자가 직접 확인한 최우선 추천 카페
+  if (cafe.verificationStatus === "curated") boost += 35;
+  else if (cafe.verificationStatus === "verified_basic") boost += 3;
+
+  // 운영팀 우선 검수 지정 (+5)
+  if (cafe.manualPriority === "high") boost += 5;
+
+  // 카공 근거 신호 강도 — 직접 수집한 카공 시그널+태그 합산
+  const signalCount = (cafe.studySignals?.length ?? 0) + (cafe.suggestedTags?.length ?? 0);
+  if (signalCount >= 7) boost += 5;
+  else if (signalCount >= 3) boost += 3;
+
+  return Math.min(boost, 50);
+}
+
 const DEFAULT_LIMIT = 3;
 const MAX_LIMIT = 5;
 
@@ -70,7 +91,8 @@ export function recommendCafes(
   cafes: Cafe[],
   preference: UserPreference,
   userLocation: Coords,
-  limit = DEFAULT_LIMIT
+  limit = DEFAULT_LIMIT,
+  ignoreRadius = false
 ): RecommendationResult[] {
   const clampedLimit = Math.min(Math.max(limit, 1), MAX_LIMIT);
 
@@ -84,18 +106,27 @@ export function recommendCafes(
       const distanceKm = calculateDistanceKm(userLocation, { lat: cafe.lat, lng: cafe.lng });
       return { cafe, distanceKm };
     })
-    .filter(({ distanceKm }) => isWithinRadius(distanceKm, preference.radius))
+    .filter(({ distanceKm }) => ignoreRadius || isWithinRadius(distanceKm, preference.radius))
     .map(({ cafe, distanceKm }) => {
       const baseScore = scoreCafeByPreference(cafe, preference, distanceKm);
-      // needs_recheck cafes show last in results — penalize score by 20%
-      const score = cafe.verificationStatus === "needs_recheck"
-        ? Math.round(baseScore * 0.8)
-        : baseScore;
+      // 무인 카페는 카공 카페 특성상 후순위 배치 (키오스크·무인 운영으로 환경 편차 큼)
+      const isUnmanned = cafe.name.includes("무인");
+      const adjustedScore = isUnmanned
+        ? Math.round(baseScore * 0.72)
+        : cafe.verificationStatus === "needs_recheck"
+          ? Math.round(baseScore * 0.8)
+          : baseScore;
+      const manualBoost = calculateManualBoost(cafe);
+      const score = adjustedScore + manualBoost;
+      const reasons = buildRecommendationReasons(cafe, preference);
+      if (manualBoost > 0 && reasons.length < 3) {
+        reasons.push("직접 수집한 카공 근거가 있는 후보예요.");
+      }
       return {
         cafe,
         score,
         distanceKm,
-        matchReasons: buildRecommendationReasons(cafe, preference),
+        matchReasons: reasons,
       };
     })
     .sort((a, b) => b.score - a.score)

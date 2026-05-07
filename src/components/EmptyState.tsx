@@ -1,3 +1,5 @@
+import type { MascotState } from "../types/mascot";
+import { MascotImage } from "./MascotImage";
 import "../styles/components.css";
 
 type FallbackItem = {
@@ -12,12 +14,21 @@ type Props = {
   actionLabel?: string;
   onAction?: () => void;
   fallbacks?: FallbackItem[];
+  mascotState?: MascotState;
 };
 
-export function EmptyState({ title, description, actionLabel, onAction, fallbacks }: Props) {
+export function EmptyState({ title, description, actionLabel, onAction, fallbacks, mascotState }: Props) {
   return (
     <div className="empty-state">
-      <span className="empty-state__icon">☕</span>
+      {mascotState ? (
+        <MascotImage
+          state={mascotState}
+          size={mascotState === "warning" || mascotState === "emptyResult" ? "lg" : "md"}
+          decorative
+        />
+      ) : (
+        <span className="empty-state__icon">☕</span>
+      )}
       <p className="empty-state__title">{title}</p>
       <p className="empty-state__description">{description}</p>
       {fallbacks && fallbacks.length > 0 && (

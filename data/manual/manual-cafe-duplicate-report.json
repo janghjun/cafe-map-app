@@ -1,0 +1,504 @@
+{
+  "meta": {
+    "generatedAt": "2026-05-06T01:56:44.503Z",
+    "totalManual": 65,
+    "newCandidates": 46,
+    "duplicateCandidates": 12,
+    "ambiguous": 7
+  },
+  "report": [
+    {
+      "manualId": "manual-0001",
+      "manualName": "이그니토 커피컴퍼니 개항로",
+      "duplicateStatus": "ambiguous",
+      "matchedCafeId": "975e8604-a2b8-4ad3-80d7-e67e5840c819",
+      "matchedCafeName": "이그니토 커피컴퍼니",
+      "reason": "이름 유사도 69.2% — 유사하나 확정 불가, 운영자 확인 필요",
+      "confidence": 0.6923
+    },
+    {
+      "manualId": "manual-0002",
+      "manualName": "그로잉라운지 석남",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0003",
+      "manualName": "카페 꼼마 송도",
+      "duplicateStatus": "ambiguous",
+      "matchedCafeId": "d400ce75-7979-47d6-9d1f-e12ff305bd69",
+      "matchedCafeName": "카페꼼마 송도점",
+      "reason": "이름 유사도 55.6% — 유사하나 확정 불가, 운영자 확인 필요",
+      "confidence": 0.5556
+    },
+    {
+      "manualId": "manual-0004",
+      "manualName": "원스타임오프 인천시청점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "dd8404cd-067d-48f7-8a24-fa12cf985aef",
+      "matchedCafeName": "원스타임오프 인천시청점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0005",
+      "manualName": "카페더블랙 구월점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "cdd5feb7-b992-4c46-b2ff-b9c1608c0bf6",
+      "matchedCafeName": "카페더블랙 구월점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0006",
+      "manualName": "마호가니 인천구월점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0007",
+      "manualName": "더노벰버 라운지 송도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0008",
+      "manualName": "The november 라운지 구월점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0009",
+      "manualName": "온음커피",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "b4e456c8-9b7b-4b8a-8d46-ef66b215f65c",
+      "matchedCafeName": "온음커피",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0010",
+      "manualName": "이공커피 부평역점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0011",
+      "manualName": "스왈로우 영종도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0012",
+      "manualName": "카페 더 스토리 인하대점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0013",
+      "manualName": "피디커피 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0014",
+      "manualName": "셀렘 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0015",
+      "manualName": "bbrick 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0016",
+      "manualName": "아날로그 3호점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0017",
+      "manualName": "혜리별관 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0018",
+      "manualName": "참새커피 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0019",
+      "manualName": "이그니토 커피 로스터스 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0020",
+      "manualName": "콤비커피로스터스 구월동",
+      "duplicateStatus": "ambiguous",
+      "matchedCafeId": "77614844-9c50-4293-bdbe-e5b124690488",
+      "matchedCafeName": "콤비커피로스터스",
+      "reason": "이름 유사도 63.6% — 유사하나 확정 불가, 운영자 확인 필요",
+      "confidence": 0.6364
+    },
+    {
+      "manualId": "manual-0021",
+      "manualName": "카페아들러 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0022",
+      "manualName": "카페 보레브 구월동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0023",
+      "manualName": "묵음 부평",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0024",
+      "manualName": "스탠다드 스퀘어 부평",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "37826c51-edc2-45d0-b424-c54745a2fb66",
+      "matchedCafeName": "스탠다드 스퀘어 부평점",
+      "reason": "이름 유사도 90.9% — 동일 카페로 판단",
+      "confidence": 0.9091
+    },
+    {
+      "manualId": "manual-0025",
+      "manualName": "런 아모크 부평구청",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0026",
+      "manualName": "하이테이블 부평점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "331dcb28-2226-441d-9aff-ed4c165aca83",
+      "matchedCafeName": "하이테이블 부평점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0027",
+      "manualName": "론트커피 부평",
+      "duplicateStatus": "ambiguous",
+      "matchedCafeId": "1358e3fa-c98d-49d1-a4ca-a6eac031464d",
+      "matchedCafeName": "론트커피",
+      "reason": "이름 유사도 50.0% — 유사하나 확정 불가, 운영자 확인 필요",
+      "confidence": 0.5
+    },
+    {
+      "manualId": "manual-0028",
+      "manualName": "이디야커피 부평로데오점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "cb7e0037-f0a3-4bd2-b87e-5729e2aa931d",
+      "matchedCafeName": "이디야커피 부평로데오점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0029",
+      "manualName": "투썸플레이스 부평시장역점",
+      "duplicateStatus": "ambiguous",
+      "matchedCafeId": "57440db8-48fc-4d5e-a517-ea082531d45d",
+      "matchedCafeName": "투썸플레이스 부평역점",
+      "reason": "이름 유사도 69.2% — 유사하나 확정 불가, 운영자 확인 필요",
+      "confidence": 0.6923
+    },
+    {
+      "manualId": "manual-0030",
+      "manualName": "모짜르트 부평",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0031",
+      "manualName": "카페에디토레 인천송도점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "a64174cb-14ae-413f-a0aa-bb3cdf4b4526",
+      "matchedCafeName": "카페에디토레 인천송도점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0032",
+      "manualName": "기노스코 송도",
+      "duplicateStatus": "ambiguous",
+      "matchedCafeId": "135425db-0f46-4fd9-9696-e5b3d3b45c2c",
+      "matchedCafeName": "기노스코",
+      "reason": "이름 유사도 50.0% — 유사하나 확정 불가, 운영자 확인 필요",
+      "confidence": 0.5
+    },
+    {
+      "manualId": "manual-0033",
+      "manualName": "넌넌하우스 송도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0034",
+      "manualName": "보테가9 송도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0035",
+      "manualName": "아티제 인천송도점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "46219cc5-40cd-4592-a588-673586d18ffc",
+      "matchedCafeName": "아티제 인천송도점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0036",
+      "manualName": "이디야커피 송도타임스페이스점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0037",
+      "manualName": "카페 와안 송도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0038",
+      "manualName": "마음북카페 송도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0039",
+      "manualName": "디벨로핑룸 가좌점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "96495dd8-0a6d-4f19-8576-275585cd180b",
+      "matchedCafeName": "디벨로핑룸 가좌점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0040",
+      "manualName": "하이테이블 서구청",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "958fcb12-5b26-41d1-9b45-30dcd8e9829f",
+      "matchedCafeName": "하이테이블 서구청점",
+      "reason": "이름 유사도 88.9% — 동일 카페로 판단",
+      "confidence": 0.8889
+    },
+    {
+      "manualId": "manual-0041",
+      "manualName": "카페 첼리나 인천서구",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0042",
+      "manualName": "투썸플레이스 인천석남역점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "385adcd7-46a9-47e1-b579-63682b6df794",
+      "matchedCafeName": "투썸플레이스 인천석남역점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0043",
+      "manualName": "페이지37 청라",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0044",
+      "manualName": "투썸플레이스 청라시티타워점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0045",
+      "manualName": "베이지버터 계산동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0046",
+      "manualName": "도도록 계양",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0047",
+      "manualName": "스틸머그 계산동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0048",
+      "manualName": "파스쿠찌 계양구청점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0049",
+      "manualName": "바위커피 영종도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0050",
+      "manualName": "왓소요 운서역",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0051",
+      "manualName": "카페 구읍 영종도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0052",
+      "manualName": "카페 웜뱃 영종도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0053",
+      "manualName": "913 인하대역",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0054",
+      "manualName": "카페빈스 인하대",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0055",
+      "manualName": "원더라운지 미추홀구",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0056",
+      "manualName": "카페 더블랙 주안",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0057",
+      "manualName": "카페 헤르만 인하대",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0058",
+      "manualName": "투썸플레이스 제물포역점",
+      "duplicateStatus": "duplicate_candidate",
+      "matchedCafeId": "467c9b88-e9e4-4a62-9f47-bc1e0e3bc507",
+      "matchedCafeName": "투썸플레이스 제물포역점",
+      "reason": "이름 유사도 100.0% — 동일 카페로 판단",
+      "confidence": 1
+    },
+    {
+      "manualId": "manual-0059",
+      "manualName": "카페 피너클 인천논현동",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0060",
+      "manualName": "커피만나 인천라피에스타점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0061",
+      "manualName": "트리플에이커피 소래포구점",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0062",
+      "manualName": "카페 느린우체통 강화도",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0063",
+      "manualName": "앤드아워 동인천역",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0064",
+      "manualName": "어빌리지커피 로스터스 개항로",
+      "duplicateStatus": "new_candidate",
+      "reason": "일치 후보 없음 — 신규 후보",
+      "confidence": 0
+    },
+    {
+      "manualId": "manual-0065",
+      "manualName": "포디움126 신포동",
+      "duplicateStatus": "ambiguous",
+      "matchedCafeId": "6d42c4ab-b9e0-4573-9217-27f1f8f61b9c",
+      "matchedCafeName": "포디움126",
+      "reason": "이름 유사도 55.6% — 유사하나 확정 불가, 운영자 확인 필요",
+      "confidence": 0.5556
+    }
+  ]
+}

@@ -40,7 +40,6 @@ export function MapView({ points, userLocation, onMarkerClick, height = 220 }: P
       // Calculate center
       const lats = points.map((p) => p.lat);
       const lngs = points.map((p) => p.lng);
-      if (userLocation) { lats.push(userLocation.lat); lngs.push(userLocation.lng); }
       const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
       const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
 
@@ -48,7 +47,7 @@ export function MapView({ points, userLocation, onMarkerClick, height = 220 }: P
         center: [centerLat, centerLng],
         zoom: 14,
         zoomControl: true,
-        attributionControl: true,
+        attributionControl: false,
         scrollWheelZoom: false,
       });
 
@@ -108,12 +107,9 @@ export function MapView({ points, userLocation, onMarkerClick, height = 220 }: P
       }
 
       // Fit bounds to show all markers with padding
-      const allLatLngs = [
-        ...points.map((p) => [p.lat, p.lng] as [number, number]),
-        ...(userLocation ? [[userLocation.lat, userLocation.lng] as [number, number]] : []),
-      ];
-      if (allLatLngs.length > 1) {
-        map.fitBounds(L.latLngBounds(allLatLngs), { padding: [32, 32] });
+      const cafeLatLngs = points.map((p) => [p.lat, p.lng] as [number, number]);
+      if (cafeLatLngs.length > 1) {
+        map.fitBounds(L.latLngBounds(cafeLatLngs), { padding: [32, 32] });
       }
     });
 

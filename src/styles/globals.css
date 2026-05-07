@@ -55,15 +55,107 @@
   --max-width: 480px;
 }
 
+/* ── Dark mode ── */
+[data-theme="dark"] {
+  --color-bg:           #1a1008;
+  --color-surface:      #261608;
+  --color-surface-warm: #2e1c0c;
+  --color-surface-tint: #3a2210;
+
+  --color-text:         #f5ede5;
+  --color-text-muted:   #c9a97a;
+  --color-text-subtle:  #8a7060;
+
+  --color-border:       #3d2918;
+  --color-border-soft:  #2e1c0c;
+  --color-border-strong:#6b4226;
+
+  --shadow-xs:         0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-sm:         0 1px 4px rgba(0, 0, 0, 0.40), 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-md:         0 4px 12px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.30);
+  --shadow-lg:         0 8px 24px rgba(0, 0, 0, 0.50), 0 4px 8px rgba(0, 0, 0, 0.35);
+  --shadow-card:       0 1px 3px rgba(0, 0, 0, 0.40), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.50), 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* Dark mode component overrides — hardcoded colors in components.css / pages.css */
+
+/* CafeCard reasons block */
+[data-theme="dark"] .cafe-card__reasons {
+  background: linear-gradient(135deg, #2e1c0c 0%, #3a2210 100%);
+}
+[data-theme="dark"] .cafe-card__reason-line { color: var(--color-text-muted); }
+
+/* CafeCard primary variant */
+[data-theme="dark"] .cafe-card--primary {
+  background: linear-gradient(180deg, #2e1c0c 0%, #261608 60%);
+}
+
+/* Attribute badges */
+[data-theme="dark"] .attr-badge--good    { background-color: #0e2d1a; color: #6fcf97; }
+[data-theme="dark"] .attr-badge--fair    { background-color: #2d1e00; color: #f6ab40; }
+[data-theme="dark"] .attr-badge--low     { background-color: #2d0e10; color: #f48080; }
+[data-theme="dark"] .attr-badge--unknown { background-color: #1e1e1e; color: #9e9e9e; }
+
+/* Verification badges */
+[data-theme="dark"] .verification-badge--curated { background-color: #0e2d1a; color: #6fcf97; }
+[data-theme="dark"] .verification-badge--basic   { background-color: #0d1f3c; color: #7bb8f8; }
+[data-theme="dark"] .verification-badge--recheck { background-color: #2d1e00; color: #f6ab40; }
+
+/* Status badges */
+[data-theme="dark"] .status-badge--open   { background-color: #0e2d1a; color: #6fcf97; }
+[data-theme="dark"] .status-badge--night  { background-color: #1c1230; color: #c4aaff; }
+[data-theme="dark"] .status-badge--closed { background-color: #2d0e10; color: #f48080; }
+
+/* MiniMap legend */
+[data-theme="dark"] .mini-map__legend-me   { color: var(--color-brand-light); }
+[data-theme="dark"] .mini-map__legend-name { color: var(--color-text-muted); }
+[data-theme="dark"] .mini-map__legend-rank { color: var(--color-text); }
+[data-theme="dark"] .mini-map__disclaimer  { color: var(--color-text-subtle); }
+
+/* EmptyState fallback button hover */
+[data-theme="dark"] .empty-state__fallback-btn:hover { background: var(--color-surface-warm); }
+
+/* HomePage location status */
+[data-theme="dark"] .location-status--ok   { color: #6fcf97; }
+[data-theme="dark"] .location-status--warn { color: #f6ab40; }
+
+/* SuggestCafe / pages info boxes */
+[data-theme="dark"] .si-card { background: var(--color-surface-warm); }
+
+/* Suggestion form */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: var(--color-surface-warm);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Dark mode tag badge overrides */
+[data-theme="dark"] .tag-badge--quiet     { background-color: #0e2d1a; color: #6fcf97; }
+[data-theme="dark"] .tag-badge--talkable  { background-color: #2d1e00; color: #f6ab40; }
+[data-theme="dark"] .tag-badge--outlet    { background-color: #0d1f3c; color: #7bb8f8; }
+[data-theme="dark"] .tag-badge--wifi      { background-color: #1c1230; color: #c4aaff; }
+[data-theme="dark"] .tag-badge--late_open { background-color: #2d0e20; color: #f093b8; }
+[data-theme="dark"] .tag-badge--24hours   { background-color: #0a0818; color: #c7b8f0; }
+[data-theme="dark"] .tag-badge--coffee    { background-color: #1a0f08; color: #c9a97a; }
+[data-theme="dark"] .tag-badge--dessert   { background-color: #2d0e1e; color: #f48fb1; }
+[data-theme="dark"] .tag-badge--solo      { background-color: #0e1430; color: #9aabff; }
+[data-theme="dark"] .tag-badge--group     { background-color: #062220; color: #4dd0c8; }
+
+
 html, body {
   margin: 0;
   padding: 0;
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+  font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 #root {

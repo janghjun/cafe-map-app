@@ -351,7 +351,8 @@
 
 .search-input:focus {
   border-color: var(--color-brand);
-  background-color: #ffffff;
+  background-color: var(--color-surface-warm);
+  color: var(--color-text);
   box-shadow: 0 0 0 3px rgba(107, 66, 38, 0.1);
 }
 
@@ -767,4 +768,22 @@ details[open] > .faq-item__q::after {
 
 .score-bar__block--filled {
   background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-light) 100%);
+}
+
+/* ── MiniMapPreview OSM attribution ── */
+.mini-map__osm-credit {
+  margin: 3px 0 0;
+  font-size: 10px;
+  color: var(--color-text-subtle);
+  text-align: right;
+}
+
+.mini-map__osm-credit a {
+  color: var(--color-text-subtle);
+  text-decoration: none;
+}
+
+.mini-map__osm-credit a:hover {
+  text-decoration: underline;
+  color: var(--color-brand);
 }

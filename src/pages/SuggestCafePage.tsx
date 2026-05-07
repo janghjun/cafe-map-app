@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { CafeTag } from "../types/cafe";
+import { MascotImage } from "../components/MascotImage";
 import {
   type UpdateReasonType,
   UPDATE_REASON_LABELS,
@@ -90,7 +91,7 @@ export function SuggestCafePage({
           </button>
         </div>
         <div className="suggest-success">
-          <p className="suggest-success__icon">✅</p>
+          <MascotImage state="checking" size="lg" decorative />
           <h2 className="suggest-success__title">
             {isUpdate ? "제보해주셔서 감사해요!" : "제안해주셔서 감사해요!"}
           </h2>
